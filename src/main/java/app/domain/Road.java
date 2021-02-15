@@ -1,10 +1,16 @@
 package app.domain;
 
-import lombok.Data;
+import java.util.List;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@ToString
 public class Road {
+    @Getter
     private Integer laneCount;
 
+    private List<Line> lineList;
+
+    private List<TrafficLight> trafficLightList;
 
 }
