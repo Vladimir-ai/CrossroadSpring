@@ -1,8 +1,9 @@
 package app.domain;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.ToString;
 
+@Data
 @ToString
 public class TrafficLight {
     public enum TrafficLightState{
@@ -13,7 +14,6 @@ public class TrafficLight {
         BOTH_GREEN;
     }
 
-    @Getter
     private TrafficLightState currentState;
 
 
