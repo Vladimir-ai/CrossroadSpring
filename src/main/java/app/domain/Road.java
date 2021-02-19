@@ -6,8 +6,7 @@ import lombok.ToString;
 
 @ToString
 public class Road {
-    @Getter
-    private Integer laneCount;
+    private boolean isVertical;
 
     private List<Line> lineList;
 

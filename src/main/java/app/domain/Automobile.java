@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Automobile {
-    private Integer speed;
+    private Integer targetSpeed;
+
+    private Integer currentSpeed;
 
 }
