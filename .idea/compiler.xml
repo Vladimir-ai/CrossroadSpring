@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="CrossroadSpring" target="15" />
+      <module name="CrossroadSpring" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

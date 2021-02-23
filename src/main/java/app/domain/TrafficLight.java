@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString
 public class TrafficLight {
     public enum TrafficLightState{
         RED,
@@ -14,7 +13,11 @@ public class TrafficLight {
         BOTH_GREEN;
     }
 
+    private Integer pos;
     private TrafficLightState currentState;
 
+    public TrafficLight(Integer pos){
+        this.pos = pos;
+    }
 
 }
