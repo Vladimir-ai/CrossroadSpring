@@ -1,4 +1,7 @@
-package app.domain;
+package app;
+
+import app.domain.Automobile;
+import app.domain.DriveModel;
 
 public interface RoadBlockCallback {
 

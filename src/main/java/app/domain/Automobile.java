@@ -1,5 +1,6 @@
 package app.domain;
 
+import app.RoadBlockCallback;
 import lombok.Data;
 
 import java.util.Random;
@@ -26,13 +27,13 @@ public class Automobile{
     public Automobile(RoadBlockCallback roadBlockCallback){
         this(new Random().nextInt(90) + 30, roadBlockCallback);
     }
-
-    public void go(){
-        RoadBlockCallback blockCallback = roadBlockCallback.subscribe(this, driveModel);
-
-        if (blockCallback != null){
-            roadBlockCallback.unsubscribe(this);
-            roadBlockCallback = blockCallback;
-        }
-    }
+//
+//    public void go(){
+//        RoadBlockCallback blockCallback = roadBlockCallback.subscribe(this, driveModel);
+//
+//        if (blockCallback != null){
+//            roadBlockCallback.unsubscribe(this);
+//            roadBlockCallback = blockCallback;
+//        }
+//    }
 }

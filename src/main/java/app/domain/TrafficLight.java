@@ -13,8 +13,4 @@ public class TrafficLight {
     private List<RoadBlock> controlledBlocks;
     private TrafficLightState currentState;
 
-    public TrafficLight(List<RoadBlock> controlledBlocks){
-        this.controlledBlocks = controlledBlocks;
-    }
-
 }
