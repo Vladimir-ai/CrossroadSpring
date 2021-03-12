@@ -1,23 +1,20 @@
 package app.domain;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrafficLight {
-    public enum TrafficLightState{
-        RED,
-        YELLOW,
-        GREEN,
-        GREEN_RIGHT,
-        BOTH_GREEN;
-    }
 
-    private Integer pos;
+    private List<RoadBlock> controlledBlocks;
     private TrafficLightState currentState;
 
-    public TrafficLight(Integer pos){
-        this.pos = pos;
+    public TrafficLight(List<RoadBlock> controlledBlocks){
+        this.controlledBlocks = controlledBlocks;
     }
 
 }

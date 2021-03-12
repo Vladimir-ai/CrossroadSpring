@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pedestrian {
-    private Integer pos;
+public class Pedestrian{
     private Integer speed;
 }
