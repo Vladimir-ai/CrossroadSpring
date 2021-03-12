@@ -27,8 +27,9 @@ public class World {
         this(10);
     }
 
-    //Init links from one line to others
+
     private void initAutomobileLines() {
+        //инициирует дороги и связывает однонаправленные
         for (int index = 0; index < 4; index++) {
             for (int j = 0; j < LINES_PER_SIDE; j++) {
                 linesList.add(new Line(LINE_LENGTH));
@@ -39,13 +40,11 @@ public class World {
         }
 
         final int LINE_COUNT = LINES_PER_SIDE * 4;
-
+        //Связывает дороги на перекрестке
         for (int index = 0; index < 4; index++) {
-            //correct firstOp
             RoadBlock leftTurn = linesList.get(LINES_PER_SIDE * index).getBlockByIndex(LINE_LENGTH / 2);
             RoadBlock rightTurn = linesList.get(LINES_PER_SIDE * (index + 1) - 1).getBlockByIndex(LINE_LENGTH / 2 - (LINES_PER_SIDE - 1));
 
-            //probably correct
             leftTurn.getAutomobileLinksList()[0] = linesList
                     .get(LINE_COUNT / 2 + (index < 2 ? index * LINES_PER_SIDE : -(index / 2 + index % 2) * LINES_PER_SIDE))
                     .getBlockByIndex(LINE_LENGTH / 2 - 1);
@@ -62,7 +61,7 @@ public class World {
 
             for (int j = 0; j < LINES_PER_SIDE; j++){
                 RoadBlock block = linesList.get(index * LINES_PER_SIDE + j)
-                        .getBlockByIndex(LINE_LENGTH / 2 - LINES_PER_SIDE - 1 - trafficLightDist);
+                        .getBlockByIndex(LINE_LENGTH / 2 - LINES_PER_SIDE - 2 - trafficLightDist);
 
                 roadBlocks.add(block);
 

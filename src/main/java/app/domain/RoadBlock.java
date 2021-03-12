@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 public class RoadBlock implements RoadBlockCallback {
 
     private RoadBlock[] automobileLinksList = new RoadBlock[3]; // как хранить для 1-3 полос??? пока заполняем нулями, делаем висячие на пустоту, всегда 3 полосы
-    private List<Pedestrian> pedestrianLinksList;
     private Automobile automobile;
-    private List<Pedestrian> pedestrianList;
     private TrafficLightState trafficLightState;
 
     public synchronized boolean Subscribe(Automobile auto){
