@@ -68,7 +68,7 @@ public class World {
 //                roadBlocks.add(block);
 //
 //                for (int blockInd = 0; blockInd < trafficLightDist; blockInd++){
-//                    block = block.getAutomobileLinksList()[2];
+//                    block = block.getAutomobileLinksList()[1];
 //                    roadBlocks.add(block);
 //                }
             }

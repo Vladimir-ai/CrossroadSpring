@@ -43,7 +43,8 @@ public class RoadGenerationService {
         //инициирует дороги и связывает однонаправленные
         for (int index = 0; index < 4; index++) {
             for (int j = 0; j < roadComponent.getLinesPerSide(); j++) {
-                lineRepository.save(new Line(roadComponent.getLinesPerSide()));
+                //lineRepository.save(new Line(roadComponent.getLineLength()));
+                initLine(roadComponent.getLineLength());
 
                 if (j > 0)
                     linkCoDirectionalLines(lineRepository.get(index * 2).get(),
@@ -52,7 +53,7 @@ public class RoadGenerationService {
             }
         }
 
-        List<Line> linesList = lineRepository.getAll();
+      //  List<Line> linesList = lineRepository.getAll();
         final int LINES_PER_SIDE = roadComponent.getLinesPerSide();
         final int LINE_LENGTH = roadComponent.getLineLength();
         final int LINE_COUNT = roadComponent.getLinesPerSide() * 4;
@@ -60,19 +61,34 @@ public class RoadGenerationService {
         //Связывает дороги на перекрестке
         for (int index = 0; index < 4; index++) {
             RoadBlock leftTurn = roadBlockRepository.getRoadBlockShiftByIndex(
-                    linesList.get(LINES_PER_SIDE * index).getStartBlock(),
+                    lineRepository.get(LINES_PER_SIDE * index).get().getStartBlock(),
                     LINE_LENGTH / 2);
             RoadBlock rightTurn = roadBlockRepository.getRoadBlockShiftByIndex(
-                    linesList.get(LINES_PER_SIDE * (index + 1) - 1).getStartBlock(),
+                    lineRepository.get(LINES_PER_SIDE * (index + 1) - 1).get().getStartBlock(),
                     LINE_LENGTH / 2 - (LINES_PER_SIDE - 1));
 
-            leftTurn.getAutomobileLinksList()[0] = roadBlockRepository.getRoadBlockShiftByIndex(linesList
-                    .get(LINE_COUNT / 2 + (index < 2 ? index * LINES_PER_SIDE : -(index / 2 + index % 2) * LINES_PER_SIDE)).getStartBlock(),
+            leftTurn.getAutomobileLinksList()[0] = roadBlockRepository.getRoadBlockShiftByIndex(lineRepository
+                    .get(LINE_COUNT / 2 + (index < 2 ? index * LINES_PER_SIDE : -(index / 2 + index % 2) * LINES_PER_SIDE)).get().getStartBlock(),
                     (LINE_LENGTH / 2 - 1));
-            rightTurn.getAutomobileLinksList()[2] = roadBlockRepository.getRoadBlockShiftByIndex(linesList
-                    .get(LINE_COUNT - (index < 2 ? index : index - 2 * (index % 2) + 1) * LINES_PER_SIDE - 1).getStartBlock(),
+            rightTurn.getAutomobileLinksList()[2] = roadBlockRepository.getRoadBlockShiftByIndex(lineRepository
+                    .get(LINE_COUNT - (index < 2 ? index : index - 2 * (index % 2) + 1) * LINES_PER_SIDE - 1).get().getStartBlock(),
                     LINE_LENGTH / 2 + (LINES_PER_SIDE - 1));
         }
+    }
+
+    private void initLine(int lineLength){
+        RoadBlock startBlock = new RoadBlock();
+        RoadBlock curr = startBlock;
+        roadBlockRepository.save(curr);
+
+        for (int i = 0; i < lineLength - 1; i++) {
+            RoadBlock next = new RoadBlock();
+            roadBlockRepository.setRoadBlockLinkByIndex(curr, next, 1);
+            roadBlockRepository.save(next);
+            curr = next;
+        }
+
+        lineRepository.save(new Line(lineLength, startBlock));
     }
 
     private void initTrafficLights() {
@@ -90,7 +106,7 @@ public class RoadGenerationService {
                 roadBlocks.add(block);
 
                 for (int blockInd = 0; blockInd < trafficLightDist; blockInd++){
-                    block = block.getAutomobileLinksList()[2];
+                    block = roadBlockRepository.getRoadBlockLinkByIndex(block, 1);
                     roadBlocks.add(block);
                 }
             }
@@ -99,7 +115,7 @@ public class RoadGenerationService {
         }
     }
 
-    private static void linkCoDirectionalLines(Line left, Line right, int targetLineCount){
+    private void linkCoDirectionalLines(Line left, Line right, int targetLineCount){
         if (left.getLineLength() != right.getLineLength())
             return;
         RoadBlock leftBlock = left.getStartBlock();
@@ -107,12 +123,12 @@ public class RoadGenerationService {
         RoadBlock rightBlock = right.getStartBlock();
 
         for(int i = 0; i < left.getLineLength() - 1; i++){
-            RoadBlock leftNextBlock = leftBlock.getAutomobileLinksList()[1];
-            RoadBlock rightNextBlock = rightBlock.getAutomobileLinksList()[1];
+            RoadBlock leftNextBlock =  roadBlockRepository.getRoadBlockLinkByIndex(leftBlock, 1);
+            RoadBlock rightNextBlock = roadBlockRepository.getRoadBlockLinkByIndex(rightBlock, 1);
 
             if (!(i <= left.getLineLength() / 2 - (targetLineCount - 1) && i >= left.getLineLength() / 2 - 3)) {
-                leftBlock.getAutomobileLinksList()[2] = rightNextBlock;
-                rightBlock.getAutomobileLinksList()[0] = leftNextBlock;
+                roadBlockRepository.setRoadBlockLinkByIndex(leftBlock, rightNextBlock, 2);
+                roadBlockRepository.setRoadBlockLinkByIndex(rightBlock, leftNextBlock, 0);
             }
 
             leftBlock = leftNextBlock;

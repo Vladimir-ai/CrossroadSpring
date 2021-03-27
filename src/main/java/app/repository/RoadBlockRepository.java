@@ -12,7 +12,7 @@ public class RoadBlockRepository implements DataRepository<RoadBlock> {
     private List<RoadBlock> roadBlocks = new ArrayList<>();
 
     @Override
-    public Optional<RoadBlock> get(long id) {
+    public Optional<RoadBlock> get(int id) {
         return Optional.empty();
     }
 
@@ -42,6 +42,19 @@ public class RoadBlockRepository implements DataRepository<RoadBlock> {
     }
 
     public RoadBlock getRoadBlockShiftByIndex(RoadBlock roadBlock, int index){
-        return roadBlocks.get(roadBlocks.indexOf(roadBlock) + index);
+        for (int i = 0; i < index; i++){
+            roadBlock = roadBlock.getAutomobileLinksList()[1];
+        }
+        return roadBlock;
+        //return roadBlocks.get(roadBlocks.indexOf(roadBlock) + index);
+    }
+
+    public RoadBlock getRoadBlockLinkByIndex(RoadBlock roadBlock, int index){
+        return roadBlock.getAutomobileLinksList()[index];
+        //return roadBlocks.get(roadBlocks.indexOf(roadBlock)).getAutomobileLinksList()[index];
+    }
+
+    public void setRoadBlockLinkByIndex(RoadBlock roadBlockFrom, RoadBlock roadBlockTo, int index){
+        roadBlockFrom.getAutomobileLinksList()[index] = roadBlockTo;
     }
 }

@@ -13,7 +13,7 @@ public class TrafficLightRepository implements DataRepository<TrafficLight> {
     private List<TrafficLight> trafficLights = new ArrayList<>();
 
     @Override
-    public Optional<TrafficLight> get(long id) {
+    public Optional<TrafficLight> get(int id) {
         return Optional.empty();
     }
 

@@ -18,7 +18,8 @@ public class CrossroadApp {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
         RoadGenerationService sampleService = context.getBean(RoadGenerationService.class);
-        sampleService.generateRoad();
+        System.out.println("0");
+        //sampleService.generateRoad();
         //sampleService.printHello("Jonny");
 
         //ProductRepository productRepository = context.getBean(ProductRepository.class);

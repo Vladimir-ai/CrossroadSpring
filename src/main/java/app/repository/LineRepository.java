@@ -15,7 +15,7 @@ public class LineRepository implements DataRepository<Line> {
     private List<Line> lines = new ArrayList<>();
 
     @Override
-    public Optional<Line> get(long id) {
+    public Optional<Line> get(int id) {
         return Optional.of(lines.get((int) id));
     }
 

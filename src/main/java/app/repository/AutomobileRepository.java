@@ -13,7 +13,7 @@ public class AutomobileRepository implements DataRepository<Automobile> {
     private List<Automobile> automobiles = new ArrayList<>();
 
     @Override
-    public Optional get(long id) {
+    public Optional get(int id) {
         return Optional.empty();
     }
 
