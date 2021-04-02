@@ -1,5 +1,6 @@
 package app.model;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Line {
 
+    private UUID id = UUID.randomUUID();
     private int lineLength;
     private RoadBlock startBlock; //соединять линии???
+
+    public Line(int lineLength, RoadBlock startBlock) {
+        this.lineLength = lineLength;
+        this.startBlock = startBlock;
+    }
 
     public Line(int lineLength){
         this.lineLength = lineLength;
@@ -47,7 +54,5 @@ public class Line {
 //        return res;
 //    }
 
-    private void BuildLine(){
-    }
 
 }

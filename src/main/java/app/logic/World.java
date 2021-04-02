@@ -1,4 +1,4 @@
-package app.temp;
+package app.logic;
 
 import app.model.Line;
 import app.model.RoadBlock;

@@ -1,51 +1,26 @@
 package app.repository;
 
-import app.component.RoadComponent;
-import app.interfaces.DataRepository;
 import app.model.Line;
-import app.model.RoadBlock;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LineRepository implements DataRepository<Line> {
-    private List<Line> lines = new ArrayList<>();
+public interface LineRepository {
+    Optional<Line> get(UUID id);
 
-    @Override
-    public Optional<Line> get(int id) {
-        return Optional.of(lines.get((int) id));
-    }
+    Optional<Line> get(int id);
 
-    @Override
-    public List<Line> getAll() {
-        return lines;
-    }
+    List<Line> getAll();
 
-    @Override
-    public void save(Line line) {
-        lines.add(line);
-    }
+    void save(Line line);
 
-    @Override
-    public void update(Line line) {
-//        if(lines.stream().filter(ln -> ln.equals(line)).findFirst().isEmpty())
-//            return;
+    void update(Line line);
 
-        //find by id
-        lines.stream().filter(ln -> ln.hashCode() == line.hashCode()).findFirst().ifPresent(ln -> ln = line);
-    }
+    void delete(UUID id);
 
-    @Override
-    public void delete(long id) {
-        lines.remove((int) id);
-    }
+    void delete(Line line);
 
-    @Override
-    public void delete(Line line) {
-        lines.removeIf(line::equals);
-    }
-
+    void clear();
 }

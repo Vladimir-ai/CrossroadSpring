@@ -1,5 +1,6 @@
 package app.model;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,10 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Automobile{
 
-    private Integer targetSpeed;
-    private Integer currentSpeed;
+    private UUID id = UUID.randomUUID();
+    private Integer speed;
     private DriveModel driveModel;
-//    private RoadBlockCallback roadBlockCallback;
+    private RoadBlock roadBlock;
+    private Boolean hasTurned = false;
+
+    public Automobile(Integer speed, DriveModel driveModel, RoadBlock roadBlock) {
+        this.speed = speed;
+        this.driveModel = driveModel;
+        this.roadBlock = roadBlock;
+    }
+
+    //    private RoadBlockCallback roadBlockCallback;
 
 //    public Automobile(Integer targetSpeed, DriveModel driveModel, RoadBlockCallback roadBlockCallback) {
 //        this.targetSpeed = targetSpeed;

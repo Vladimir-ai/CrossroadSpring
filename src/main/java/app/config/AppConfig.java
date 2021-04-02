@@ -1,22 +1,21 @@
 package app.config;
 
 import app.component.RoadComponent;
-import app.model.Automobile;
-import app.repository.AutomobileRepository;
-import app.repository.LineRepository;
-import app.repository.RoadBlockRepository;
-import app.repository.TrafficLightRepository;
+import app.repository.impl.AutomobileRepositoryImpl;
+import app.repository.impl.LineRepositoryImpl;
+import app.repository.impl.RoadBlockRepositoryImpl;
+import app.repository.impl.TrafficLightRepositoryImpl;
 import app.service.RoadGenerationService;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackageClasses = {
-        LineRepository.class,
+        LineRepositoryImpl.class,
         RoadComponent.class,
-        RoadBlockRepository.class,
-        AutomobileRepository.class,
-        TrafficLightRepository.class,
+        RoadBlockRepositoryImpl.class,
+        AutomobileRepositoryImpl.class,
+        TrafficLightRepositoryImpl.class,
         RoadGenerationService.class})
 public class AppConfig {
 }

@@ -1,45 +1,24 @@
 package app.repository;
 
-import app.interfaces.DataRepository;
 import app.model.Automobile;
-import app.model.Line;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AutomobileRepository implements DataRepository<Automobile> {
-    private List<Automobile> automobiles = new ArrayList<>();
+public interface AutomobileRepository {
+    Optional<Automobile> get(UUID id);
 
-    @Override
-    public Optional get(int id) {
-        return Optional.empty();
-    }
+    List<Automobile> getAll();
 
-    @Override
-    public List getAll() {
-        return automobiles;
-    }
+    void save(Automobile entity);
 
-    @Override
-    public void save(Automobile entity) {
-        automobiles.add(entity);
-    }
+    void update(Automobile entity);
 
-    @Override
-    public void update(Automobile entity) {
-        //id search
-        automobiles.stream().filter(ln -> ln.hashCode() == entity.hashCode()).findFirst().ifPresent(ln -> ln = entity);
-    }
+    void delete(UUID id);
 
-    @Override
-    public void delete(long id) {
-        automobiles.remove((int) id);
-    }
+    void delete(Automobile entity);
 
-    @Override
-    public void delete(Automobile entity) {
-        automobiles.removeIf(entity::equals);
-    }
+    public void clear();
 }

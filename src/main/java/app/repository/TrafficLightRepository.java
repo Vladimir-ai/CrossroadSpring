@@ -1,44 +1,24 @@
 package app.repository;
 
-
-import app.interfaces.DataRepository;
 import app.model.TrafficLight;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
+import java.util.UUID;
 
-@Repository
-public class TrafficLightRepository implements DataRepository<TrafficLight> {
-    private List<TrafficLight> trafficLights = new ArrayList<>();
+public interface TrafficLightRepository {
+    Optional<TrafficLight> get(UUID id);
 
-    @Override
-    public Optional<TrafficLight> get(int id) {
-        return Optional.empty();
-    }
+    List<TrafficLight> getAll();
 
-    @Override
-    public List<TrafficLight> getAll() {
-        return trafficLights;
-    }
+    void save(TrafficLight entity);
 
-    @Override
-    public void save(TrafficLight entity) {
-        trafficLights.add(entity);
-    }
+    void update(TrafficLight entity);
 
-    @Override
-    public void update(TrafficLight entity) {
-        //TO-DO
-    }
+    void delete(UUID id);
 
-    @Override
-    public void delete(long id) {
-        trafficLights.remove((int) id);
-    }
+    void delete(TrafficLight entity);
 
-    @Override
-    public void delete(TrafficLight entity) {
-        trafficLights.remove(entity);
-    }
+    void clear();
+
+
 }

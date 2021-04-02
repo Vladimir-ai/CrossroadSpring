@@ -1,60 +1,29 @@
 package app.repository;
 
-import app.interfaces.DataRepository;
 import app.model.RoadBlock;
-import java.util.ArrayList;
+import app.model.TrafficLight;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
+import java.util.UUID;
 
-@Repository
-public class RoadBlockRepository implements DataRepository<RoadBlock> {
-    private List<RoadBlock> roadBlocks = new ArrayList<>();
+public interface RoadBlockRepository {
+    Optional<RoadBlock> get(UUID id);
 
-    @Override
-    public Optional<RoadBlock> get(int id) {
-        return Optional.empty();
-    }
+    List<RoadBlock> getAll();
 
-    @Override
-    public List<RoadBlock> getAll() {
-        return roadBlocks;
-    }
+    void save(RoadBlock entity);
 
-    @Override
-    public void save(RoadBlock entity) {
-        roadBlocks.add(entity);
-    }
+    void update(RoadBlock entity);
 
-    @Override
-    public void update(RoadBlock entity) {
-        //TO-DO
-    }
+    void delete(UUID id);
 
-    @Override
-    public void delete(long id) {
-        roadBlocks.remove((int) id);
-    }
+    void delete(RoadBlock entity);
 
-    @Override
-    public void delete(RoadBlock entity) {
-        roadBlocks.removeIf(entity::equals);
-    }
+    void clear();
 
-    public RoadBlock getRoadBlockShiftByIndex(RoadBlock roadBlock, int index){
-        for (int i = 0; i < index; i++){
-            roadBlock = roadBlock.getAutomobileLinksList()[1];
-        }
-        return roadBlock;
-        //return roadBlocks.get(roadBlocks.indexOf(roadBlock) + index);
-    }
+    RoadBlock getRoadBlockShiftByIndex(RoadBlock roadBlock, int index);
 
-    public RoadBlock getRoadBlockLinkByIndex(RoadBlock roadBlock, int index){
-        return roadBlock.getAutomobileLinksList()[index];
-        //return roadBlocks.get(roadBlocks.indexOf(roadBlock)).getAutomobileLinksList()[index];
-    }
+    RoadBlock getRoadBlockLinkByIndex(RoadBlock roadBlock, int index);
 
-    public void setRoadBlockLinkByIndex(RoadBlock roadBlockFrom, RoadBlock roadBlockTo, int index){
-        roadBlockFrom.getAutomobileLinksList()[index] = roadBlockTo;
-    }
+    void setRoadBlockLinkByIndex(RoadBlock roadBlockFrom, RoadBlock roadBlockTo, int index);
 }

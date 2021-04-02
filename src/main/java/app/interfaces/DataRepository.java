@@ -2,11 +2,12 @@ package app.interfaces;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
 public interface DataRepository<T> {
-    Optional<T> get(int id);
+    Optional<T> get(UUID id);
 
     List<T> getAll();
 
@@ -14,7 +15,9 @@ public interface DataRepository<T> {
 
     void update(T entity);
 
-    void delete(long id);
+    void delete(UUID id);
 
     void delete(T entity);
+
+    void clear();
 }
