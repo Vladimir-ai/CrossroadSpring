@@ -28,14 +28,14 @@ public class CrossroadApp {
 
     }
 
-    private static void run(){
+    private static void run() {
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
         RoadGenerationService roadService = context.getBean(RoadGenerationService.class);
         CarGenerationService carGenerationService = context.getBean(CarGenerationService.class);
         CarMovingService carMovingService = context.getBean(CarMovingService.class);
         TrafficLightService trafficLightService = context.getBean(TrafficLightService.class);
 
-        if(!roadService.isRoadInitiated())
+        if (!roadService.isRoadInitiated())
             roadService.initRoad();
 
         System.out.println("Road Generated");
@@ -48,7 +48,7 @@ public class CrossroadApp {
 
         carGenerationService.generateCars(8);
 
-        for(int i = 0; i < 101; i++){
+        for (int i = 0; i < 101; i++) {
             trafficLightService.changeStateByTime();
             System.out.println("Traffic lights state was checked\n");
             printAllTrafficLights(trafficLightService.getTrafficLightList());
@@ -62,26 +62,26 @@ public class CrossroadApp {
             printCarsToConsole(carMovingService.getAllAutomobiles());
 
 
-//            try {
-//                Thread.sleep(1000);
-//            }catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private static void printCarsToConsole(List<Automobile> cars){
+    private static void printCarsToConsole(List<Automobile> cars) {
         System.out.println("Automobile list:");
-        cars.forEach(auto ->{
+        cars.forEach(auto -> {
             System.out.println("auto with ID " + auto.getId().toString() + " stands on road block with ID " + auto.getRoadBlock().getId().toString() + "\n");
         });
     }
 
-    private static void printAllTrafficLights(List<TrafficLight> trafficLights){
+    private static void printAllTrafficLights(List<TrafficLight> trafficLights) {
         System.out.println("Traffic light list: ");
         trafficLights.forEach(trafficLight -> {
             System.out.println("trafficLight with ID " + trafficLight.getId().toString()
-                    +  " has state " + trafficLight.getCurrentState().toString() + "\n");
+                    + " has state " + trafficLight.getCurrentState().toString() + "\n");
         });
     }
 
