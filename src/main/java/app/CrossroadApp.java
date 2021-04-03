@@ -11,6 +11,7 @@ import app.service.RoadGenerationService;
 import app.service.TrafficLightService;
 import java.time.Instant;
 import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,10 +22,12 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(/*basePackages = "di2"*/basePackageClasses = {AppConfig.class})
 public class CrossroadApp {
 
+    //static Logger LOG = Logger.getLogger(CrossroadApp.class.getName());
+
+
     public static void main(String[] args) {
 
         run();
-        //ProductRepository productRepository = context.getBean(ProductRepository.class);
 
     }
 
@@ -48,7 +51,7 @@ public class CrossroadApp {
 
         carGenerationService.generateCars(8);
 
-        for (int i = 0; i < 101; i++) {
+        while(carMovingService.getAllAutomobiles().size() != 0) {
             trafficLightService.changeStateByTime();
             System.out.println("Traffic lights state was checked\n");
             printAllTrafficLights(trafficLightService.getTrafficLightList());

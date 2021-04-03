@@ -99,8 +99,7 @@ public class TrafficLightService {
 
         trafficLight.getControlledBlocks()
                 .forEach(roadBlock -> {
-                    roadBlock.setTrafficLightState(
-                            TrafficLightState.values()[(trafficLight.getCurrentState().ordinal() + 1) % TrafficLightState.values().length]);
+                    roadBlock.setTrafficLightState(trafficLight.getCurrentState());
                     roadBlockRepository.update(roadBlock);
                 });
 
