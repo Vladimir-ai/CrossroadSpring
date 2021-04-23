@@ -1,51 +1,83 @@
 package app.repository.impl;
 
 
-import app.domain.DTO.TrafficLightDTO;
+import app.domain.entity.Automobile;
+import app.domain.entity.TrafficLight;
 import app.repository.TrafficLightRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TrafficLightRepositoryImpl implements TrafficLightRepository {
-    private final List<TrafficLightDTO> trafficLightDTOS = new ArrayList<>();
+    private final SessionFactory sessionFactory;
+
+    @Autowired
+    public TrafficLightRepositoryImpl(SessionFactory sessionFactory){
+        this.sessionFactory = sessionFactory;
+    }
+
+
 
     @Override
-    public Optional<TrafficLightDTO> get(UUID id) {
-        return trafficLightDTOS.stream().filter(trafficLight -> trafficLight.getId().equals(id)).findFirst();
+    public Optional<TrafficLight> get(Long id) {
+        Session session = sessionFactory.openSession();
+        var result = session.get(TrafficLight.class, id);
+        session.close();
+        return Optional.of(result);
     }
 
     @Override
-    public List<TrafficLightDTO> getAll() {
-        return trafficLightDTOS;
+    public List<TrafficLight> getAll() {
+        Session session = sessionFactory.openSession();
+        var query = session.createQuery("from trafficLight ", TrafficLight.class);
+        var result = query.getResultList();
+        session.close();
+        return result;
     }
 
     @Override
-    public void save(TrafficLightDTO entity) {
-        trafficLightDTOS.add(entity);
+    public void save(TrafficLight entity) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(entity);
+        transaction.commit();
+        session.close();
     }
 
     @Override
-    public void update(TrafficLightDTO entity) {
-        trafficLightDTOS.stream().filter(trafficLight -> trafficLight.getId().equals(entity.getId()))
-                .findFirst().ifPresent(trafficLight -> trafficLight = entity);
+    public void update(TrafficLight entity) {
+        var current = get(entity.getId());
+        Session session = sessionFactory.openSession();
+        session.evict(current);
+        session.update(entity);
+        session.close();
     }
 
     @Override
-    public void delete(UUID id) {
-        trafficLightDTOS.removeIf(trafficLight -> trafficLight.getId().equals(id));
+    public void delete(Long id) {
+        var session = sessionFactory.openSession();
+        var curr = session.get(Automobile.class, id);
+        session.delete(curr);
+        session.close();
     }
 
     @Override
-    public void delete(TrafficLightDTO entity) {
-        trafficLightDTOS.removeIf(trafficLight -> trafficLight.getId().equals(entity.getId()));
+    public void delete(TrafficLight entity) {
+        var session = sessionFactory.openSession();
+        var curr = session.get(TrafficLight.class, entity.getId());
+        session.delete(curr);
+        session.close();
     }
 
     @Override
     public void clear() {
-        trafficLightDTOS.clear();
+        var session = sessionFactory.openSession();
+        session.delete("from trafficLight", TrafficLight.class);
+        session.close();
     }
 }

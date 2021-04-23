@@ -1,15 +1,12 @@
 package app.repository.impl;
 
-import app.domain.DTO.AutomobileDTO;
 import app.domain.entity.Automobile;
 import app.repository.AutomobileRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -33,31 +30,51 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
 
     @Override
     public List<Automobile> getAll() {
-        return automobileDTOS;
+        Session session = sessionFactory.openSession();
+        var query = session.createQuery("from automobiles", Automobile.class);
+        List<Automobile> result = query.getResultList();
+        session.close();
+        return result;
     }
 
     @Override
     public void save(Automobile entity) {
-        automobileDTOS.add(entity);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(entity);
+        transaction.commit();
+        session.close();
     }
 
     @Override
     public void update(Automobile entity) {
-        automobileDTOS.stream().filter(ent -> ent.getId().equals(entity.getId())).findFirst().ifPresent(ln -> ln = entity);
+        var current = get(entity.getId());
+        Session session = sessionFactory.openSession();
+        session.evict(current);
+        session.update(entity);
+        session.close();
     }
 
     @Override
     public void delete(Long id) {
-        automobileDTOS.removeIf(auto -> auto.getId().equals(id));
+        var session = sessionFactory.openSession();
+        var curr = session.get(Automobile.class, id);
+        session.delete(curr);
+        session.close();
     }
 
     @Override
     public void delete(Automobile entity) {
-        automobileDTOS.removeIf(auto -> entity.getId().equals(auto.getId()));
+        var session = sessionFactory.openSession();
+        var curr = session.get(Automobile.class, entity.getId());
+        session.delete(curr);
+        session.close();
     }
 
     @Override
     public void clear() {
-        automobileDTOS.clear();
+        var session = sessionFactory.openSession();
+        session.delete("from automobiles", Automobile.class);
+        session.close();
     }
 }

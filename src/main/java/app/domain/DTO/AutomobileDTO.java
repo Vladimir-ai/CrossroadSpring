@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AutomobileDTO {
 
-    private UUID id = UUID.randomUUID();
+    private long id;
     private Integer speed;
     private DriveModel driveModelDTO;
     private RoadBlockDTO roadBlockDTO;

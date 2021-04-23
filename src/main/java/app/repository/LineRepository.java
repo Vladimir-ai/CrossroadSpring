@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface LineRepository {
     Optional<Line> get(Long id);
 
-    Optional<Line> get(int id);
-
     List<Line> getAll();
 
     void save(Line line);
