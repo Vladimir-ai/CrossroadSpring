@@ -11,8 +11,11 @@
                   value="app.domain.entity"/>
         <property name="hibernateProperties">
             <props>
+                <prop key="hibernate.connection.autocommit">
+                    true
+                </prop>
                 <prop key="hibernate.hbm2ddl.auto">
-                    create-drop
+                    validate
                 </prop>
                 <prop key="hibernate.dialect">
                     org.hibernate.dialect.PostgreSQL10Dialect

@@ -20,12 +20,16 @@ public class CrossroadApp {
 
 
     public static void main(String[] args) {
-        System.out.println(System.getProperties().get("java.class.path"));
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
         var block = context.getBean(RoadBlockRepository.class);
-        var test = new RoadBlock();
-        test.setTrafficLightState(TrafficLightState.RED);
-        block.save(test);
+//        var test = new RoadBlock();
+//        test.setTrafficLightState(TrafficLightState.RED);
+//        test.setIsCrossroad(true);
+//        block.save(test);
+//        var test1 = new RoadBlock();
+//        test1.setTrafficLightState(TrafficLightState.RED);
+//        test1.setIsCrossroad(true);
+//        block.save(test1);
         //run();
 
     }
