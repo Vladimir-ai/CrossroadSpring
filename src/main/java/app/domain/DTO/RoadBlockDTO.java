@@ -1,6 +1,5 @@
-package app.model;
+package app.domain.DTO;
 
-import java.util.PrimitiveIterator;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoadBlock {
+public class RoadBlockDTO {
 
     private UUID id = UUID.randomUUID();
-    private RoadBlock[] automobileLinksList = new RoadBlock[3]; // как хранить для 1-3 полос??? пока заполняем нулями, делаем висячие на пустоту, всегда 3 полосы
-    private Automobile automobile;
+    private RoadBlockDTO[] automobileLinksList = new RoadBlockDTO[3]; // как хранить для 1-3 полос??? пока заполняем нулями, делаем висячие на пустоту, всегда 3 полосы
+    private AutomobileDTO automobileDTO;
     private TrafficLightState trafficLightState;
     private Boolean isCrossRoad = false;
 

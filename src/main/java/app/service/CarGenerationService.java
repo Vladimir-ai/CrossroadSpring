@@ -1,14 +1,12 @@
 package app.service;
 
 import app.component.RoadComponent;
-import app.model.Automobile;
-import app.model.DriveModel;
-import app.model.Line;
-import app.model.RoadBlock;
+import app.domain.DTO.AutomobileDTO;
+import app.domain.DTO.DriveModel;
+import app.domain.DTO.LineDTO;
+import app.domain.DTO.RoadBlockDTO;
 import app.repository.AutomobileRepository;
 import app.repository.LineRepository;
-import app.repository.impl.AutomobileRepositoryImpl;
-import app.repository.impl.LineRepositoryImpl;
 import java.util.Optional;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +32,23 @@ public class CarGenerationService {
         Random random = new Random();
 
         for (int i = 0; i < count && i < roadComponent.getLinesPerSide() * 4; i++){
-            Optional<Line> ln;
+            Optional<LineDTO> ln;
 
             do{
                 int lineNum = random.nextInt(roadComponent.getLinesPerSide() * 4);
                 ln = lineRepository.get(lineNum);
             }
-            while (!ln.isPresent() || (ln.isPresent() && ln.get().getStartBlock().getAutomobile() != null));
+            while (!ln.isPresent() || (ln.isPresent() && ln.get().getStartBlock().getAutomobileDTO() != null));
 
-            RoadBlock startBlock = ln.get().getStartBlock();
+            RoadBlockDTO startBlock = ln.get().getStartBlock();
             int autoSpeed  = random.nextInt(roadComponent.getMaxAutoSpeed() - roadComponent.getMinAutoSpeed());
 
-            Automobile automobile = new Automobile(autoSpeed + roadComponent.getMinAutoSpeed(),
+            AutomobileDTO automobileDTO = new AutomobileDTO(autoSpeed + roadComponent.getMinAutoSpeed(),
                     DriveModel.values()[random.nextInt(DriveModel.values().length)],
                     startBlock);
-            startBlock.setAutomobile(automobile);
+            startBlock.setAutomobileDTO(automobileDTO);
 
-            automobileRepository.save(automobile);
+            automobileRepository.save(automobileDTO);
         }
     }
 }

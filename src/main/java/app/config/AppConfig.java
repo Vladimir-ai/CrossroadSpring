@@ -1,21 +1,19 @@
 package app.config;
 
-import app.component.RoadComponent;
-import app.repository.impl.AutomobileRepositoryImpl;
-import app.repository.impl.LineRepositoryImpl;
-import app.repository.impl.RoadBlockRepositoryImpl;
-import app.repository.impl.TrafficLightRepositoryImpl;
-import app.service.RoadGenerationService;
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackageClasses = {
-        LineRepositoryImpl.class,
-        RoadComponent.class,
-        RoadBlockRepositoryImpl.class,
-        AutomobileRepositoryImpl.class,
-        TrafficLightRepositoryImpl.class,
-        RoadGenerationService.class})
+@ComponentScan(basePackages = "app")
 public class AppConfig {
+
+
+    public void a(){
+        SessionFactory factory = new org.hibernate.cfg.
+                Configuration().configure().buildSessionFactory();
+
+        factory.createEntityManager().createQuery("SELECT id from roadblocks");
+
+    }
 }

@@ -1,7 +1,6 @@
 package app.repository.impl;
 
-import app.model.RoadBlock;
-import app.model.TrafficLight;
+import app.domain.DTO.RoadBlockDTO;
 import app.repository.RoadBlockRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,59 +10,59 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoadBlockRepositoryImpl implements RoadBlockRepository {
-    private final List<RoadBlock> roadBlocks = new ArrayList<>();
+    private final List<RoadBlockDTO> roadBlockDTOS = new ArrayList<>();
 
     @Override
-    public Optional<RoadBlock> get(UUID id) {
-        return roadBlocks.stream().filter(block -> block.getId().equals(id)).findFirst();
+    public Optional<RoadBlockDTO> get(UUID id) {
+        return roadBlockDTOS.stream().filter(block -> block.getId().equals(id)).findFirst();
     }
 
     @Override
-    public List<RoadBlock> getAll() {
-        return roadBlocks;
+    public List<RoadBlockDTO> getAll() {
+        return roadBlockDTOS;
     }
 
     @Override
-    public void save(RoadBlock entity) {
-        roadBlocks.add(entity);
+    public void save(RoadBlockDTO entity) {
+        roadBlockDTOS.add(entity);
     }
 
     @Override
-    public void update(RoadBlock entity) {
-        roadBlocks.stream().filter(block -> block.getId().equals(entity.getId())).findFirst().ifPresent(block -> block = entity);
+    public void update(RoadBlockDTO entity) {
+        roadBlockDTOS.stream().filter(block -> block.getId().equals(entity.getId())).findFirst().ifPresent(block -> block = entity);
     }
 
     @Override
     public void delete(UUID id) {
-        roadBlocks.removeIf(block -> block.getId().equals(id));
+        roadBlockDTOS.removeIf(block -> block.getId().equals(id));
     }
 
     @Override
-    public void delete(RoadBlock entity) {
-        roadBlocks.removeIf(block -> block.getId().equals(entity.getId()));
+    public void delete(RoadBlockDTO entity) {
+        roadBlockDTOS.removeIf(block -> block.getId().equals(entity.getId()));
     }
 
     @Override
     public void clear() {
-        roadBlocks.clear();
+        roadBlockDTOS.clear();
     }
 
-    public RoadBlock getRoadBlockShiftByIndex(RoadBlock roadBlock, int index){
+    public RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index){
         for (int i = 0; i < index; i++){
-            roadBlock = roadBlock.getAutomobileLinksList()[1];
+            roadBlockDTO = roadBlockDTO.getAutomobileLinksList()[1];
         }
-        return roadBlock;
+        return roadBlockDTO;
         //return roadBlocks.get(roadBlocks.indexOf(roadBlock) + index);
     }
 
     @Override
-    public RoadBlock getRoadBlockLinkByIndex(RoadBlock roadBlock, int index){
-        return roadBlock.getAutomobileLinksList()[index];
+    public RoadBlockDTO getRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTO, int index){
+        return roadBlockDTO.getAutomobileLinksList()[index];
         //return roadBlocks.get(roadBlocks.indexOf(roadBlock)).getAutomobileLinksList()[index];
     }
 
     @Override
-    public void setRoadBlockLinkByIndex(RoadBlock roadBlockFrom, RoadBlock roadBlockTo, int index){
-        roadBlockFrom.getAutomobileLinksList()[index] = roadBlockTo;
+    public void setRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTOFrom, RoadBlockDTO roadBlockDTOTo, int index){
+        roadBlockDTOFrom.getAutomobileLinksList()[index] = roadBlockDTOTo;
     }
 }

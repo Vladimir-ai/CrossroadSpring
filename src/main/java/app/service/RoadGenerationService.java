@@ -1,10 +1,10 @@
 package app.service;
 
 import app.component.RoadComponent;
-import app.model.Line;
-import app.model.RoadBlock;
-import app.model.TrafficLight;
-import app.model.TrafficLightState;
+import app.domain.DTO.LineDTO;
+import app.domain.DTO.RoadBlockDTO;
+import app.domain.DTO.TrafficLightDTO;
+import app.domain.DTO.TrafficLightState;
 import app.repository.LineRepository;
 import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
@@ -65,11 +65,11 @@ public class RoadGenerationService {
 
         //Связывает дороги на перекрестке
         for (int index = 0; index < 4; index++) {
-            RoadBlock leftTurn = roadBlockRepository.getRoadBlockShiftByIndex(
+            RoadBlockDTO leftTurn = roadBlockRepository.getRoadBlockShiftByIndex(
                     lineRepository.get(LINES_PER_SIDE * index).get().getStartBlock(),
                     LINE_LENGTH / 2);
 
-            RoadBlock rightTurn = roadBlockRepository.getRoadBlockShiftByIndex(
+            RoadBlockDTO rightTurn = roadBlockRepository.getRoadBlockShiftByIndex(
                     lineRepository.get(LINES_PER_SIDE * (index + 1) - 1).get().getStartBlock(),
                     LINE_LENGTH / 2 - LINES_PER_SIDE);
 
@@ -89,14 +89,14 @@ public class RoadGenerationService {
     }
 
     private void initLine(int lineLength) {
-        RoadBlock startBlock = new RoadBlock();
+        RoadBlockDTO startBlock = new RoadBlockDTO();
         startBlock.setTrafficLightState(TrafficLightState.GREEN);
-        RoadBlock curr = startBlock;
+        RoadBlockDTO curr = startBlock;
 
         roadBlockRepository.save(curr);
 
         for (int i = 0; i < lineLength - 1; i++) {
-            RoadBlock next = new RoadBlock();
+            RoadBlockDTO next = new RoadBlockDTO();
             next.setTrafficLightState(TrafficLightState.GREEN);
             roadBlockRepository.setRoadBlockLinkByIndex(curr, next, 1);
 
@@ -107,7 +107,7 @@ public class RoadGenerationService {
         }
 
 
-        lineRepository.save(new Line(lineLength, startBlock));
+        lineRepository.save(new LineDTO(lineLength, startBlock));
     }
 
     private void initTrafficLights() {
@@ -116,39 +116,39 @@ public class RoadGenerationService {
         final int TRAFFIC_LIGHT_DIST = roadComponent.getTrafficLightDist();
 
         for (int index = 0; index < 4; index++) {
-            List<RoadBlock> roadBlocks = new ArrayList<>();
+            List<RoadBlockDTO> roadBlockDTOS = new ArrayList<>();
 
             for (int j = 0; j < roadComponent.getLinesPerSide(); j++) {
-                RoadBlock block = roadBlockRepository.getRoadBlockShiftByIndex(
+                RoadBlockDTO block = roadBlockRepository.getRoadBlockShiftByIndex(
                         lineRepository.getAll().get(index * roadComponent.getLinesPerSide() + j).getStartBlock(),
                         (LINE_LENGTH / 2 - LINES_PER_SIDE - 2 - TRAFFIC_LIGHT_DIST));
 
-                roadBlocks.add(block);
+                roadBlockDTOS.add(block);
 
                 for (int blockInd = 0; blockInd < TRAFFIC_LIGHT_DIST; blockInd++) {
                     block = roadBlockRepository.getRoadBlockLinkByIndex(block, 1);
-                    roadBlocks.add(block);
+                    roadBlockDTOS.add(block);
                 }
             }
 
-            trafficLightRepository.save(new TrafficLight(roadBlocks, TrafficLightState.RED));
-            roadBlocks.forEach(roadBlock -> {
+            trafficLightRepository.save(new TrafficLightDTO(roadBlockDTOS, TrafficLightState.RED));
+            roadBlockDTOS.forEach(roadBlock -> {
                 roadBlock.setTrafficLightState(TrafficLightState.RED);
                 roadBlockRepository.update(roadBlock);
             });
         }
     }
 
-    private void linkCoDirectionalLines(Line left, Line right, int targetLineCount) {
+    private void linkCoDirectionalLines(LineDTO left, LineDTO right, int targetLineCount) {
         if (left.getLineLength() != right.getLineLength())
             return;
-        RoadBlock leftBlock = left.getStartBlock();
+        RoadBlockDTO leftBlock = left.getStartBlock();
 
-        RoadBlock rightBlock = right.getStartBlock();
+        RoadBlockDTO rightBlock = right.getStartBlock();
 
         for (int i = 0; i < left.getLineLength() - 1; i++) {
-            RoadBlock leftNextBlock = roadBlockRepository.getRoadBlockLinkByIndex(leftBlock, 1);
-            RoadBlock rightNextBlock = roadBlockRepository.getRoadBlockLinkByIndex(rightBlock, 1);
+            RoadBlockDTO leftNextBlock = roadBlockRepository.getRoadBlockLinkByIndex(leftBlock, 1);
+            RoadBlockDTO rightNextBlock = roadBlockRepository.getRoadBlockLinkByIndex(rightBlock, 1);
 
             if (!(i <= left.getLineLength() / 2 - (targetLineCount - 1) && i >= left.getLineLength() / 2 - 3)) {
                 roadBlockRepository.setRoadBlockLinkByIndex(leftBlock, rightNextBlock, 2);

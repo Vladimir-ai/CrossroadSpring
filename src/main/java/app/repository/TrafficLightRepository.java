@@ -1,12 +1,12 @@
 package app.repository;
 
-import app.model.TrafficLight;
+import app.domain.DTO.TrafficLightDTO;
+import app.domain.entity.TrafficLight;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface TrafficLightRepository {
-    Optional<TrafficLight> get(UUID id);
+    Optional<TrafficLight> get(Long id);
 
     List<TrafficLight> getAll();
 
@@ -14,7 +14,7 @@ public interface TrafficLightRepository {
 
     void update(TrafficLight entity);
 
-    void delete(UUID id);
+    void delete(Long id);
 
     void delete(TrafficLight entity);
 

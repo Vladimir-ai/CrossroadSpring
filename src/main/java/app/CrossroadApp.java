@@ -1,17 +1,14 @@
 package app;
 
 import app.config.AppConfig;
-import app.model.Automobile;
-import app.model.RoadBlock;
-import app.model.TrafficLight;
-import app.model.TrafficLightState;
+import app.domain.DTO.AutomobileDTO;
+import app.domain.DTO.TrafficLightDTO;
+import app.domain.DTO.TrafficLightState;
 import app.service.CarGenerationService;
 import app.service.CarMovingService;
 import app.service.RoadGenerationService;
 import app.service.TrafficLightService;
-import java.time.Instant;
 import java.util.List;
-import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,15 +16,18 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@ComponentScan(/*basePackages = "di2"*/basePackageClasses = {AppConfig.class})
+@ComponentScan(basePackageClasses = {AppConfig.class})
 public class CrossroadApp {
 
     //static Logger LOG = Logger.getLogger(CrossroadApp.class.getName());
 
 
     public static void main(String[] args) {
+        System.out.println(System.getProperties().get("java.class.path"));
+        ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
+        context.getBean(AppConfig.class).a();
 
-        run();
+        //run();
 
     }
 
@@ -73,16 +73,16 @@ public class CrossroadApp {
         }
     }
 
-    private static void printCarsToConsole(List<Automobile> cars) {
+    private static void printCarsToConsole(List<AutomobileDTO> cars) {
         System.out.println("Automobile list:");
         cars.forEach(auto -> {
-            System.out.println("auto with ID " + auto.getId().toString() + " stands on road block with ID " + auto.getRoadBlock().getId().toString() + "\n");
+            System.out.println("auto with ID " + auto.getId().toString() + " stands on road block with ID " + auto.getRoadBlockDTO().getId().toString() + "\n");
         });
     }
 
-    private static void printAllTrafficLights(List<TrafficLight> trafficLights) {
+    private static void printAllTrafficLights(List<TrafficLightDTO> trafficLightDTOS) {
         System.out.println("Traffic light list: ");
-        trafficLights.forEach(trafficLight -> {
+        trafficLightDTOS.forEach(trafficLight -> {
             System.out.println("trafficLight with ID " + trafficLight.getId().toString()
                     + " has state " + trafficLight.getCurrentState().toString() + "\n");
         });

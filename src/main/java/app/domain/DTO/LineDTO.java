@@ -1,4 +1,4 @@
-package app.model;
+package app.domain.DTO;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -8,18 +8,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Line {
+public class LineDTO {
 
     private UUID id = UUID.randomUUID();
     private int lineLength;
-    private RoadBlock startBlock; //соединять линии???
+    private RoadBlockDTO startBlock; //соединять линии???
 
-    public Line(int lineLength, RoadBlock startBlock) {
+    public LineDTO(int lineLength, RoadBlockDTO startBlock) {
         this.lineLength = lineLength;
         this.startBlock = startBlock;
     }
 
-    public Line(int lineLength){
+    public LineDTO(int lineLength){
         this.lineLength = lineLength;
 
 //        startBlock = new RoadBlock();

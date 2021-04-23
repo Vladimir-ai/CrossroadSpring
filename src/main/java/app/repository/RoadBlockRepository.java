@@ -1,13 +1,13 @@
 package app.repository;
 
-import app.model.RoadBlock;
-import app.model.TrafficLight;
+import app.domain.DTO.RoadBlockDTO;
+import app.domain.entity.RoadBlock;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface RoadBlockRepository {
-    Optional<RoadBlock> get(UUID id);
+    Optional<RoadBlock> get(Long id);
 
     List<RoadBlock> getAll();
 
@@ -15,15 +15,15 @@ public interface RoadBlockRepository {
 
     void update(RoadBlock entity);
 
-    void delete(UUID id);
+    void delete(Long id);
 
     void delete(RoadBlock entity);
 
     void clear();
 
-    RoadBlock getRoadBlockShiftByIndex(RoadBlock roadBlock, int index);
+    RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index);
 
-    RoadBlock getRoadBlockLinkByIndex(RoadBlock roadBlock, int index);
+    RoadBlockDTO getRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTO, int index);
 
-    void setRoadBlockLinkByIndex(RoadBlock roadBlockFrom, RoadBlock roadBlockTo, int index);
+    void setRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTOFrom, RoadBlockDTO roadBlockDTOTo, int index);
 }

@@ -1,6 +1,7 @@
 package app.repository;
 
-import app.model.Automobile;
+import app.domain.DTO.AutomobileDTO;
+import app.domain.entity.Automobile;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AutomobileRepository {
-    Optional<Automobile> get(UUID id);
+    Optional<Automobile> get(Long id);
 
     List<Automobile> getAll();
 
@@ -16,7 +17,7 @@ public interface AutomobileRepository {
 
     void update(Automobile entity);
 
-    void delete(UUID id);
+    void delete(Long id);
 
     void delete(Automobile entity);
 

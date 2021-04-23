@@ -1,4 +1,4 @@
-package app.model;
+package app.domain.DTO;
 
 import java.util.List;
 import java.util.UUID;
@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrafficLight {
+public class TrafficLightDTO {
 
     private UUID id = UUID.randomUUID();
-    private List<RoadBlock> controlledBlocks;
+    private List<RoadBlockDTO> controlledBlocks;
     private TrafficLightState currentState;
     private long lastSwitchTime;
     private long cycleTimeRed;
     private long cycleTimeYellow;
     private long cycleTimeGreen;
 
-    public TrafficLight(List<RoadBlock> controlledBlocks, TrafficLightState currentState) {
+    public TrafficLightDTO(List<RoadBlockDTO> controlledBlocks, TrafficLightState currentState) {
         this.controlledBlocks = controlledBlocks;
         this.currentState = currentState;
     }

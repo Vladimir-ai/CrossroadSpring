@@ -1,4 +1,4 @@
-package app.model;
+package app.domain.DTO;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Automobile{
+public class AutomobileDTO {
 
     private UUID id = UUID.randomUUID();
     private Integer speed;
-    private DriveModel driveModel;
-    private RoadBlock roadBlock;
+    private DriveModel driveModelDTO;
+    private RoadBlockDTO roadBlockDTO;
     private Boolean hasTurned = false;
 
-    public Automobile(Integer speed, DriveModel driveModel, RoadBlock roadBlock) {
+    public AutomobileDTO(Integer speed, DriveModel driveModelDTO, RoadBlockDTO roadBlockDTO) {
         this.speed = speed;
-        this.driveModel = driveModel;
-        this.roadBlock = roadBlock;
+        this.driveModelDTO = driveModelDTO;
+        this.roadBlockDTO = roadBlockDTO;
     }
 
     //    private RoadBlockCallback roadBlockCallback;

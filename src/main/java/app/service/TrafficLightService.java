@@ -1,8 +1,8 @@
 package app.service;
 
 import app.component.RoadComponent;
-import app.model.TrafficLight;
-import app.model.TrafficLightState;
+import app.domain.DTO.TrafficLightDTO;
+import app.domain.DTO.TrafficLightState;
 import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
 import java.util.List;
@@ -26,37 +26,37 @@ public class TrafficLightService {
     }
 
 
-    public List<TrafficLight> getTrafficLightList() {
+    public List<TrafficLightDTO> getTrafficLightList() {
         return trafficLightRepository.getAll();
     }
 
 
     public void startAll() {
-        for (TrafficLight trafficLight : trafficLightRepository.getAll()) {
-            trafficLight.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
+        for (TrafficLightDTO trafficLightDTO : trafficLightRepository.getAll()) {
+            trafficLightDTO.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
 
-            trafficLightRepository.update(trafficLight);
+            trafficLightRepository.update(trafficLightDTO);
         }
     }
 
 
-    public void changeCycleTimeByColor(TrafficLight trafficLight, TrafficLightState color, long time) {
+    public void changeCycleTimeByColor(TrafficLightDTO trafficLightDTO, TrafficLightState color, long time) {
         switch (color) {
             case RED: {
-                trafficLight.setCycleTimeRed(time);
+                trafficLightDTO.setCycleTimeRed(time);
                 break;
             }
             case YELLOW: {
-                trafficLight.setCycleTimeYellow(time);
+                trafficLightDTO.setCycleTimeYellow(time);
                 break;
             }
             case GREEN: {
-                trafficLight.setCycleTimeGreen(time);
+                trafficLightDTO.setCycleTimeGreen(time);
                 break;
             }
         }
 
-        trafficLightRepository.update(trafficLight);
+        trafficLightRepository.update(trafficLightDTO);
     }
 
 
@@ -90,19 +90,19 @@ public class TrafficLightService {
     }
 
 
-    private void changeStateIfNeeded(TrafficLight trafficLight) {
-        trafficLight.setCurrentState(
-                TrafficLightState.values()[(trafficLight.getCurrentState().ordinal() + 1) % TrafficLightState.values().length]
+    private void changeStateIfNeeded(TrafficLightDTO trafficLightDTO) {
+        trafficLightDTO.setCurrentState(
+                TrafficLightState.values()[(trafficLightDTO.getCurrentState().ordinal() + 1) % TrafficLightState.values().length]
         );
 
-        trafficLight.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
+        trafficLightDTO.setLastSwitchTime(roadComponent.getCurrentTimeInSeconds());
 
-        trafficLight.getControlledBlocks()
+        trafficLightDTO.getControlledBlocks()
                 .forEach(roadBlock -> {
-                    roadBlock.setTrafficLightState(trafficLight.getCurrentState());
+                    roadBlock.setTrafficLightState(trafficLightDTO.getCurrentState());
                     roadBlockRepository.update(roadBlock);
                 });
 
-        trafficLightRepository.update(trafficLight);
+        trafficLightRepository.update(trafficLightDTO);
     }
 }

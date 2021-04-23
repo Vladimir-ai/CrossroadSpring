@@ -1,14 +1,14 @@
 package app.repository;
 
-import app.model.Line;
+import app.domain.DTO.LineDTO;
+import app.domain.entity.Line;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LineRepository {
-    Optional<Line> get(UUID id);
+    Optional<Line> get(Long id);
 
     Optional<Line> get(int id);
 
@@ -18,7 +18,7 @@ public interface LineRepository {
 
     void update(Line line);
 
-    void delete(UUID id);
+    void delete(Long id);
 
     void delete(Line line);
 
