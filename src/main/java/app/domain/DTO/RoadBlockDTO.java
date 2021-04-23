@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RoadBlockDTO {
 
-    private UUID id = UUID.randomUUID();
+    private Long id;
     private RoadBlockDTO[] automobileLinksList = new RoadBlockDTO[3]; // как хранить для 1-3 полос??? пока заполняем нулями, делаем висячие на пустоту, всегда 3 полосы
-    private AutomobileDTO automobileDTO;
+    private AutomobileDTO automobile;
     private TrafficLightState trafficLightState;
     private Boolean isCrossRoad = false;
 

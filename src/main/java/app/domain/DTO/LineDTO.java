@@ -10,27 +10,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LineDTO {
 
-    private UUID id = UUID.randomUUID();
+    private Long id;
     private int lineLength;
     private RoadBlockDTO startBlock; //соединять линии???
 
-    public LineDTO(int lineLength, RoadBlockDTO startBlock) {
-        this.lineLength = lineLength;
-        this.startBlock = startBlock;
-    }
-
-    public LineDTO(int lineLength){
-        this.lineLength = lineLength;
-
-//        startBlock = new RoadBlock();
-//        RoadBlock curr = startBlock;
+//    public LineDTO(int lineLength){
+//        this.lineLength = lineLength;
 //
-//        for (int i = 0; i < lineLength - 1; i++) {
-//            RoadBlock next = new RoadBlock();
-//            curr.getAutomobileLinksList()[1] = next;
-//            curr = next;
-//        }
-    }
+////        startBlock = new RoadBlock();
+////        RoadBlock curr = startBlock;
+////
+////        for (int i = 0; i < lineLength - 1; i++) {
+////            RoadBlock next = new RoadBlock();
+////            curr.getAutomobileLinksList()[1] = next;
+////            curr = next;
+////        }
+//    }
 
 //    public RoadBlock getBlockByIndex(int index){
 //        if (index > 100 || index < 0)

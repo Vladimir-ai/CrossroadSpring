@@ -1,6 +1,5 @@
 package app.domain.DTO;
 
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,14 +12,14 @@ public class AutomobileDTO {
 
     private long id;
     private Integer speed;
-    private DriveModel driveModelDTO;
-    private RoadBlockDTO roadBlockDTO;
+    private DriveModel driveModel;
+    private RoadBlockDTO roadBlock;
     private Boolean hasTurned = false;
 
-    public AutomobileDTO(Integer speed, DriveModel driveModelDTO, RoadBlockDTO roadBlockDTO) {
+    public AutomobileDTO(Integer speed, DriveModel driveModel, RoadBlockDTO roadBlock) {
         this.speed = speed;
-        this.driveModelDTO = driveModelDTO;
-        this.roadBlockDTO = roadBlockDTO;
+        this.driveModel = driveModel;
+        this.roadBlock = roadBlock;
     }
 
     //    private RoadBlockCallback roadBlockCallback;

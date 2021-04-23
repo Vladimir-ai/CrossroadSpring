@@ -69,15 +69,19 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
     @Override
     public void delete(TrafficLight entity) {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         var curr = session.get(TrafficLight.class, entity.getId());
         session.delete(curr);
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void clear() {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         session.delete("from trafficLight", TrafficLight.class);
+        transaction.commit();
         session.close();
     }
 }

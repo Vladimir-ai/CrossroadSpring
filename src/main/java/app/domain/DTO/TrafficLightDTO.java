@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrafficLightDTO {
 
-    private UUID id = UUID.randomUUID();
+    private Long id;
     private List<RoadBlockDTO> controlledBlocks;
     private TrafficLightState currentState;
     private long lastSwitchTime;

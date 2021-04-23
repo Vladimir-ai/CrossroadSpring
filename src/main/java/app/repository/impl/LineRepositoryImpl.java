@@ -72,15 +72,19 @@ public class LineRepositoryImpl implements LineRepository {
     @Override
     public void delete(Line line) {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         var curr = session.get(Line.class, line.getId());
         session.delete(curr);
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void clear() {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         session.delete("from lines", Line.class);
+        transaction.commit();
         session.close();
     }
 }

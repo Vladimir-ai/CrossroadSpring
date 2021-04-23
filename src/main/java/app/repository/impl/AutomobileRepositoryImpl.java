@@ -41,7 +41,7 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     public void save(Automobile entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(entity);
+        session.save(entity);
         transaction.commit();
         session.close();
     }
@@ -66,15 +66,19 @@ public class AutomobileRepositoryImpl implements AutomobileRepository {
     @Override
     public void delete(Automobile entity) {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         var curr = session.get(Automobile.class, entity.getId());
         session.delete(curr);
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void clear() {
         var session = sessionFactory.openSession();
-        session.delete("from automobiles", Automobile.class);
+        Transaction transaction = session.beginTransaction();
+        session.createQuery("delete from automobiles");
+        transaction.commit();
         session.close();
     }
 }

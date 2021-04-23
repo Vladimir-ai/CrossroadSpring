@@ -2,9 +2,9 @@ package app;
 
 import app.config.AppConfig;
 import app.domain.DTO.AutomobileDTO;
-import app.domain.DTO.TrafficLightDTO;
-import app.domain.DTO.TrafficLightState;
-import app.domain.entity.RoadBlock;
+import app.domain.DTO.DriveModel;
+import app.mapper.MainMapper;
+import app.repository.AutomobileRepository;
 import app.repository.RoadBlockRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -22,8 +22,8 @@ public class CrossroadApp {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
         var block = context.getBean(RoadBlockRepository.class);
-//        var test = new RoadBlock();
 //        test.setTrafficLightState(TrafficLightState.RED);
+//        var test = new RoadBlock();
 //        test.setIsCrossroad(true);
 //        block.save(test);
 //        var test1 = new RoadBlock();
@@ -31,6 +31,8 @@ public class CrossroadApp {
 //        test1.setIsCrossroad(true);
 //        block.save(test1);
         //run();
+
+        context.getBean(AutomobileRepository.class).clear();
 
     }
 

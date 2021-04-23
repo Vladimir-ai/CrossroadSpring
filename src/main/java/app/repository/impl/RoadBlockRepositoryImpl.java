@@ -67,15 +67,19 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     @Override
     public void delete(RoadBlock entity) {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         var curr = session.get(RoadBlock.class, entity.getId());
         session.delete(curr);
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void clear() {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         session.delete("from roadBlocks", RoadBlock.class);
+        transaction.commit();
         session.close();
     }
 
