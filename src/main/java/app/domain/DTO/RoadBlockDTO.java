@@ -1,5 +1,6 @@
 package app.domain.DTO;
 
+import java.util.Arrays;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,4 +47,17 @@ public class RoadBlockDTO {
 //    public void unsubscribe(Automobile automobile) {
 //        this.automobile = null;
 //    }
+
+
+    @Override
+    public String toString() {
+        return "RoadBlockDTO{" +
+                "id=" + id +
+                ", automobileLinksList=[" +  "leftId=" + (automobileLinksList[0] == null ? "null" : automobileLinksList[0]) +
+                "centerId=" + (automobileLinksList[1] == null ? "null" : automobileLinksList[1]) + "rightId=" + (automobileLinksList[2] == null ? "null" : automobileLinksList[2]) +
+                "], automobileId=" + (automobile == null ? "null" : automobile.getId()) +
+                ", trafficLightState=" + trafficLightState +
+                ", isCrossRoad=" + isCrossRoad +
+                '}';
+    }
 }

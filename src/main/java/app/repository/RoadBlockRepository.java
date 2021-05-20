@@ -21,9 +21,4 @@ public interface RoadBlockRepository {
 
     void clear();
 
-    RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index);
-
-    RoadBlockDTO getRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTO, int index);
-
-    void setRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTOFrom, RoadBlockDTO roadBlockDTOTo, int index);
 }

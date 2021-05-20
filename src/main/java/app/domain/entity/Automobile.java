@@ -1,19 +1,23 @@
 package app.domain.entity;
 
 import app.domain.DTO.DriveModel;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 @Data
 @Entity(name ="automobiles")
+@NoArgsConstructor
 public class Automobile {
     @Id
     @Column(name = "id")
@@ -27,7 +31,7 @@ public class Automobile {
     @Enumerated(EnumType.ORDINAL)
     private DriveModel driveModel;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Nullable
     private RoadBlock roadBlock;
 

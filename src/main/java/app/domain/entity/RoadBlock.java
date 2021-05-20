@@ -3,38 +3,43 @@ package app.domain.entity;
 
 import app.domain.DTO.TrafficLightState;
 import com.sun.istack.Nullable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
 
 @Data
 @Entity(name="roadblocks")
+@NoArgsConstructor
 public class RoadBlock {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Nullable
     private RoadBlock leftBlock;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Nullable
     private RoadBlock centerBlock;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Nullable
     private RoadBlock rightBlock;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @Nullable
     private Automobile automobile;
 
@@ -43,4 +48,17 @@ public class RoadBlock {
     private TrafficLightState trafficLightState;
 
     private Boolean isCrossroad;
+
+    @Override
+    public String toString() {
+        return "RoadBlock{" +
+                "id=" + id +
+                ", leftBlockId=" + (leftBlock == null ? "none" : leftBlock.getId()) +
+                ", centerBlockId=" + (centerBlock == null ? "none" : centerBlock.getId()) +
+                ", rightBlockId=" + (rightBlock == null ? "none" : rightBlock.getId()) +
+                ", automobileId=" + (automobile == null ? "none" : automobile.getId()) +
+                ", trafficLightState=" + trafficLightState +
+                ", isCrossroad=" + isCrossroad +
+                '}';
+    }
 }

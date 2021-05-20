@@ -3,9 +3,12 @@ package app;
 import app.config.AppConfig;
 import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.DriveModel;
+import app.domain.DTO.TrafficLightState;
+import app.domain.entity.RoadBlock;
 import app.mapper.MainMapper;
 import app.repository.AutomobileRepository;
 import app.repository.RoadBlockRepository;
+import app.service.RoadGenerationService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,7 +24,11 @@ public class CrossroadApp {
 
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(CrossroadApp.class);
-        var block = context.getBean(RoadBlockRepository.class);
+        var block = context.getBean(RoadGenerationService.class);
+
+        block.initRoad();
+
+
 //        test.setTrafficLightState(TrafficLightState.RED);
 //        var test = new RoadBlock();
 //        test.setIsCrossroad(true);

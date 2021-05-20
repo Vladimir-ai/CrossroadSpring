@@ -32,7 +32,7 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     @Override
     public List<RoadBlock> getAll() {
         Session session = sessionFactory.openSession();
-        var query = session.createQuery("from roadblocks ", RoadBlock.class);
+        var query = session.createQuery("From roadblocks ", RoadBlock.class);
         var result = query.getResultList();
         session.close();
         return result;
@@ -42,25 +42,27 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     public void save(RoadBlock entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(entity);
+        session.save(entity);
         transaction.commit();
         session.close();
     }
 
     @Override
     public void update(RoadBlock entity) {
-        var current = get(entity.getId());
         Session session = sessionFactory.openSession();
-        session.evict(current);
+        Transaction transaction = session.beginTransaction();
         session.update(entity);
+        transaction.commit();
         session.close();
     }
 
     @Override
     public void delete(Long id) {
         var session = sessionFactory.openSession();
+        var transaction = session.beginTransaction();
         var curr = session.get(Automobile.class, id);
         session.delete(curr);
+        transaction.commit();
         session.close();
     }
 
@@ -78,24 +80,9 @@ public class RoadBlockRepositoryImpl implements RoadBlockRepository {
     public void clear() {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        session.delete("from roadBlocks", RoadBlock.class);
+        session.createQuery("delete from roadblocks").executeUpdate();
         transaction.commit();
         session.close();
-    }
-
-    @Override
-    public RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index) {
-        return null;
-    }
-
-    @Override
-    public RoadBlockDTO getRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTO, int index) {
-        return null;
-    }
-
-    @Override
-    public void setRoadBlockLinkByIndex(RoadBlockDTO roadBlockDTOFrom, RoadBlockDTO roadBlockDTOTo, int index) {
-
     }
 
 //    public RoadBlockDTO getRoadBlockShiftByIndex(RoadBlockDTO roadBlockDTO, int index){

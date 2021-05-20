@@ -56,16 +56,20 @@ public class LineRepositoryImpl implements LineRepository {
     public void update(Line line) {
         var current = get(line.getId());
         Session session = sessionFactory.openSession();
-        session.evict(current);
+        var trans = session.beginTransaction();
+        //session.evict(current);
         session.update(line);
+        trans.commit();
         session.close();
     }
 
     @Override
     public void delete(Long id) {
         var session = sessionFactory.openSession();
+        var trans = session.beginTransaction();
         var curr = session.get(Line.class, id);
         session.delete(curr);
+        trans.commit();
         session.close();
     }
 
@@ -83,7 +87,7 @@ public class LineRepositoryImpl implements LineRepository {
     public void clear() {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        session.delete("from lines", Line.class);
+        session.createQuery("DELETE from lines").executeUpdate();
         transaction.commit();
         session.close();
     }

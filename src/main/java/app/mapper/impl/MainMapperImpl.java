@@ -12,9 +12,10 @@ import app.mapper.MainMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapperImpl implements MainMapper {
 
-    @Override
+public class MainMapperImpl {
+
+    
     public Automobile autoDtoToAuto(AutomobileDTO dto) {
         Automobile automobile = new Automobile();
         automobile.setDriveModel(dto.getDriveModel());
@@ -29,7 +30,7 @@ public class MapperImpl implements MainMapper {
         return automobile;
     }
 
-    @Override
+    
     public AutomobileDTO autoToAutoDTO(Automobile ent) {
         AutomobileDTO dto = new AutomobileDTO();
         dto.setId(ent.getId());
@@ -43,7 +44,7 @@ public class MapperImpl implements MainMapper {
         return dto;
     }
 
-    @Override
+    
     public List<Automobile> autoDtoToAuto(List<AutomobileDTO> dto) {
         List<Automobile> res = new ArrayList<>();
         for (var item : dto)
@@ -52,7 +53,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<AutomobileDTO> autoToAutoDTO(List<Automobile> ent) {
         List<AutomobileDTO> res = new ArrayList<>();
         for (var item : ent)
@@ -61,7 +62,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public RoadBlock blockDtoToBlock(RoadBlockDTO dto) {
         RoadBlock roadBlock = new RoadBlock();
 
@@ -88,7 +89,7 @@ public class MapperImpl implements MainMapper {
         return roadBlock;
     }
 
-    @Override
+    
     public RoadBlockDTO blockToBlockDTO(RoadBlock ent) {
         RoadBlockDTO dto = new RoadBlockDTO();
         dto.setId(ent.getId());
@@ -113,7 +114,7 @@ public class MapperImpl implements MainMapper {
         return dto;
     }
 
-    @Override
+    
     public Line lineDtoToLine(LineDTO dto) {
         Line line = new Line();
         line.setLineLength(dto.getLineLength());
@@ -123,17 +124,30 @@ public class MapperImpl implements MainMapper {
         return line;
     }
 
-    @Override
+    
     public LineDTO lineToLineDTO(Line ent) {
         LineDTO lineDto = new LineDTO();
         lineDto.setLineLength(ent.getLineLength());
         lineDto.setId(ent.getId());
-        lineDto.setStartBlock(blockToBlockDTO(ent.getStartBlock()));
+        lineDto.setStartBlock(readAllDescendants(ent.getStartBlock()));
 
         return lineDto;
     }
 
-    @Override
+    private RoadBlockDTO readAllDescendants(RoadBlock block){
+        if (block.getLeftBlock() != null)
+            readAllDescendants(block.getLeftBlock());
+
+        if (block.getCenterBlock() != null)
+            readAllDescendants(block.getCenterBlock());
+
+        if (block.getRightBlock() != null)
+            readAllDescendants(block.getRightBlock());
+
+        return blockToBlockDTO(block);
+    }
+
+    
     public TrafficLight trafficLightDtoTotrafficLight(TrafficLightDTO dto) {
         TrafficLight trafficLight = new TrafficLight();
 
@@ -148,7 +162,7 @@ public class MapperImpl implements MainMapper {
         return trafficLight;
     }
 
-    @Override
+    
     public TrafficLightDTO trafficLightTotrafficLightDTO(TrafficLight ent) {
         var trafficLightDTO = new TrafficLightDTO();
 
@@ -163,7 +177,7 @@ public class MapperImpl implements MainMapper {
         return trafficLightDTO;
     }
 
-    @Override
+    
     public List<RoadBlock> blockDtoToBlock(List<RoadBlockDTO> dto) {
         List<RoadBlock> res = new ArrayList<>();
         for (var dt : dto)
@@ -172,7 +186,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<RoadBlockDTO> blockToBlockDTO(List<RoadBlock> ent) {
         List<RoadBlockDTO> res = new ArrayList<>();
         for (var elem : ent)
@@ -181,7 +195,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<Line> lineDtoToLine(List<LineDTO> dto) {
         List<Line> res = new ArrayList<>();
 
@@ -191,7 +205,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<LineDTO> lineToLineDTO(List<Line> ent) {
         List<LineDTO> res = new ArrayList<>();
 
@@ -201,7 +215,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<TrafficLight> trafficLightDtoTotrafficLight(List<TrafficLightDTO> dto) {
         List<TrafficLight> res = new ArrayList<>();
 
@@ -211,7 +225,7 @@ public class MapperImpl implements MainMapper {
         return res;
     }
 
-    @Override
+    
     public List<TrafficLightDTO> trafficLightTotrafficLightDTO(List<TrafficLight> ent) {
         List<TrafficLightDTO> res = new ArrayList<>();
 

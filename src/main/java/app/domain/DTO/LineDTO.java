@@ -14,6 +14,11 @@ public class LineDTO {
     private int lineLength;
     private RoadBlockDTO startBlock; //соединять линии???
 
+    public LineDTO(RoadBlockDTO startBlock, int lineLength){
+        this.startBlock = startBlock;
+        this.lineLength = lineLength;
+    }
+
 //    public LineDTO(int lineLength){
 //        this.lineLength = lineLength;
 //
