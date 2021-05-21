@@ -15,6 +15,8 @@ public interface RoadBlockRepository {
 
     void update(RoadBlock entity);
 
+    void updateSavingNextBlocks(RoadBlock entity);
+
     void delete(Long id);
 
     void delete(RoadBlock entity);

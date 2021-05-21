@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AutomobileDTO {
 
-    private long id;
+    private Long id;
     private Integer speed;
     private DriveModel driveModel;
     private RoadBlockDTO roadBlock;

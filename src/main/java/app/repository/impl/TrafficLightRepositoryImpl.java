@@ -3,22 +3,27 @@ package app.repository.impl;
 
 import app.domain.entity.Automobile;
 import app.domain.entity.TrafficLight;
+import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
 import java.util.List;
 import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.exception.SQLGrammarException;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TrafficLightRepositoryImpl implements TrafficLightRepository {
     private final SessionFactory sessionFactory;
+    private final RoadBlockRepository roadBlockRepository;
 
     @Autowired
-    public TrafficLightRepositoryImpl(SessionFactory sessionFactory){
+    public TrafficLightRepositoryImpl(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository){
         this.sessionFactory = sessionFactory;
+        this.roadBlockRepository = roadBlockRepository;
     }
 
 
@@ -27,7 +32,14 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
     public Optional<TrafficLight> get(Long id) {
         Session session = sessionFactory.openSession();
         var result = session.get(TrafficLight.class, id);
+
+        result.getControlledBlocks().size();
         session.close();
+
+        for (int i = 0; i < result.getControlledBlocks().size(); i++){
+            result.getControlledBlocks().set(i, roadBlockRepository.get(result.getControlledBlocks().get(i).getId()).get());
+        }
+
         return Optional.of(result);
     }
 
@@ -36,7 +48,19 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
         Session session = sessionFactory.openSession();
         var query = session.createQuery("from trafficLight ", TrafficLight.class);
         var result = query.getResultList();
+
+        result.forEach(res -> {
+            res.getControlledBlocks().size();
+        });
+
         session.close();
+
+        result.forEach(res -> {
+            for (int i = 0; i < res.getControlledBlocks().size(); i++){
+                res.getControlledBlocks().set(i, roadBlockRepository.get(res.getControlledBlocks().get(i).getId()).get());
+            }
+        });
+
         return result;
     }
 
@@ -44,14 +68,13 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
     public void save(TrafficLight entity) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(entity);
+        session.save(entity);
         transaction.commit();
         session.close();
     }
 
     @Override
     public void update(TrafficLight entity) {
-        var current = get(entity.getId());
         Session session = sessionFactory.openSession();
         var trans = session.beginTransaction();
         session.update(entity);
@@ -81,10 +104,10 @@ public class TrafficLightRepositoryImpl implements TrafficLightRepository {
 
     @Override
     public void clear() {
-        var session = sessionFactory.openSession();
-        var transaction = session.beginTransaction();
-        session.createQuery("DELETE from trafficlight").executeUpdate();
-        transaction.commit();
-        session.close();
+        try (var session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
+            session.createQuery("delete from trafficLight ").executeUpdate();
+            transaction.commit();
+         }catch (Exception ignored){}
     }
 }

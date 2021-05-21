@@ -30,7 +30,7 @@ public class TrafficLight {
     @Enumerated(EnumType.ORDINAL)
     private TrafficLightState currentState;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<RoadBlock> controlledBlocks;
 
     @Column(name = "lastSwitchTime")

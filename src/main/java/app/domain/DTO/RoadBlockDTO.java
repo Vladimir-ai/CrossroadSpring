@@ -53,8 +53,8 @@ public class RoadBlockDTO {
     public String toString() {
         return "RoadBlockDTO{" +
                 "id=" + id +
-                ", automobileLinksList=[" +  "leftId=" + (automobileLinksList[0] == null ? "null" : automobileLinksList[0]) +
-                "centerId=" + (automobileLinksList[1] == null ? "null" : automobileLinksList[1]) + "rightId=" + (automobileLinksList[2] == null ? "null" : automobileLinksList[2]) +
+                ", automobileLinksList=[" +  "leftId=" + (automobileLinksList[0] == null ? "null" : automobileLinksList[0].getId()) +
+                "centerId=" + (automobileLinksList[1] == null ? "null" : automobileLinksList[1].getId()) + "rightId=" + (automobileLinksList[2] == null ? "null" : automobileLinksList[2].getId()) +
                 "], automobileId=" + (automobile == null ? "null" : automobile.getId()) +
                 ", trafficLightState=" + trafficLightState +
                 ", isCrossRoad=" + isCrossRoad +

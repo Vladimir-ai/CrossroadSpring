@@ -10,7 +10,9 @@ import app.domain.entity.RoadBlock;
 import app.domain.entity.TrafficLight;
 import app.mapper.impl.MainMapperImpl;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring" )
@@ -22,8 +24,8 @@ public abstract class MainMapper {
         automobile.setSpeed(dto.getSpeed());
         automobile.setId(dto.getId());
 
-        if(automobile.getRoadBlock() != null) {
-            automobile.setRoadBlock(blockDtoToBlock(dto.getRoadBlock()));
+        if(dto.getRoadBlock() != null) {
+            automobile.setRoadBlock(blockDtoToBlockNoReccurency(dto.getRoadBlock()));
         }
 
         return automobile;
@@ -36,8 +38,20 @@ public abstract class MainMapper {
         dto.setSpeed(ent.getSpeed());
         dto.setHasTurned(ent.getHasTurned());
 
-        if (ent.getRoadBlock() != null)
-            dto.setRoadBlock(blockToBlockDTO(ent.getRoadBlock()));
+        if (ent.getRoadBlock() != null) {
+            dto.setRoadBlock(blockToBlockDTOnoReccurencyLazy(ent.getRoadBlock()));
+            dto.getRoadBlock().setAutomobile(dto);
+        }
+
+        return dto;
+    }
+
+    private AutomobileDTO autoToAutoDTOLazy(Automobile ent) {
+        AutomobileDTO dto = new AutomobileDTO();
+        dto.setId(ent.getId());
+        dto.setDriveModel(ent.getDriveModel());
+        dto.setSpeed(ent.getSpeed());
+        dto.setHasTurned(ent.getHasTurned());
 
         return dto;
     }
@@ -119,6 +133,24 @@ public abstract class MainMapper {
         return roadBlock;
     }
 
+    public List<RoadBlock> blockDtoToBlockNoReccurency(List<RoadBlockDTO> dto){
+        var result = new ArrayList<RoadBlock>();
+        for (var blockDTO : dto) {
+            result.add(blockDtoToBlock(blockDTO));
+        }
+        return result;
+    }
+
+    public List<RoadBlockDTO> blockToBlockDTOnoReccurency(List<RoadBlock> ent){
+        var res = new ArrayList<RoadBlockDTO>();
+
+        for (var block: ent) {
+            res.add(blockToBlockDTOnoReccurency(block));
+        }
+
+        return res;
+    }
+
     private RoadBlock getRoadBlockFromDTOFields(RoadBlockDTO dto){
         if (dto == null)
             return null;
@@ -148,12 +180,27 @@ public abstract class MainMapper {
         }
 
         if (ent.getAutomobile() != null){
-            AutomobileDTO automobileDTO = new AutomobileDTO();
-            automobileDTO.setId(ent.getAutomobile().getId());
-            automobileDTO.setSpeed(ent.getAutomobile().getSpeed());
-            automobileDTO.setHasTurned(ent.getAutomobile().getHasTurned());
-            automobileDTO.setDriveModel(ent.getAutomobile().getDriveModel());
+            AutomobileDTO automobileDTO = autoToAutoDTOLazy(ent.getAutomobile());
             automobileDTO.setRoadBlock(dto);
+        }
+
+        return dto;
+    }
+
+    public RoadBlockDTO blockToBlockDTOnoReccurencyLazy(RoadBlock ent){
+        if (ent == null){
+            return null;
+        }
+
+        RoadBlockDTO dto = new  RoadBlockDTO();
+        dto.setId(ent.getId());
+        dto.setIsCrossRoad(ent.getIsCrossroad());
+        dto.setTrafficLightState(ent.getTrafficLightState());
+
+        if(ent.getCenterBlock() != null){
+            dto.getAutomobileLinksList()[0] = getRoadBlockDTOFromFields(ent.getLeftBlock());
+            dto.getAutomobileLinksList()[1] = getRoadBlockDTOFromFields(ent.getCenterBlock());
+            dto.getAutomobileLinksList()[2] = getRoadBlockDTOFromFields(ent.getRightBlock());
         }
 
         return dto;
@@ -176,16 +223,14 @@ public abstract class MainMapper {
         }
 
         if (ent.getAutomobile() != null){
-            AutomobileDTO automobileDTO = new AutomobileDTO();
-            automobileDTO.setId(ent.getAutomobile().getId());
-            automobileDTO.setSpeed(ent.getAutomobile().getSpeed());
-            automobileDTO.setHasTurned(ent.getAutomobile().getHasTurned());
-            automobileDTO.setDriveModel(ent.getAutomobile().getDriveModel());
-            automobileDTO.setRoadBlock(dto);
+            dto.setAutomobile(autoToAutoDTOLazy(ent.getAutomobile()));
+            dto.getAutomobile().setRoadBlock(dto);
         }
 
         return dto;
     }
+
+
 
     private RoadBlockDTO getRoadBlockDTOFromFields(RoadBlock block){
         if (block == null)
@@ -198,22 +243,50 @@ public abstract class MainMapper {
         return res;
     }
 
-    public Line lineDtoToLine(LineDTO dto) {
+    public Line lineDtoToLine(LineDTO dto) { // only for generation
         Line line = new Line();
         line.setLineLength(dto.getLineLength());
         line.setId(dto.getId());
-        line.setStartBlock(blockDtoToBlock(dto.getStartBlock()));
 
+        List<RoadBlock> lines = new ArrayList<>();
+        var block = dto.getStartBlock();
+
+        Stack<RoadBlockDTO> stack = new Stack<>();
+
+        while(block != null){
+            stack.add(block);
+            block = block.getAutomobileLinksList()[1];
+        }
+
+        var lastBlock = blockDtoToBlockNoReccurency(stack.pop());
+        lines.add(lastBlock);
+
+        while (stack.size() > 0){
+            var newBlock = blockDtoToBlockNoReccurency(stack.pop());
+            newBlock.setCenterBlock(lastBlock);
+            lines.add(newBlock);
+            lastBlock = newBlock;
+        }
+
+        line.setBlockList(lines);
         return line;
     }
 
-
-    public LineDTO lineToLineDTO(Line ent) {
+    public LineDTO lineToLineDTO(Line ent) { //only for initialisations
         LineDTO lineDto = new LineDTO();
         lineDto.setLineLength(ent.getLineLength());
         lineDto.setId(ent.getId());
-        lineDto.setStartBlock(blockToBlockDTO(ent.getStartBlock()));
 
+        ent.getBlockList().sort(Comparator.comparingLong(RoadBlock::getId));
+
+        var lastBlock = blockToBlockDTOnoReccurency(ent.getBlockList().get(0));
+        for (int i = 1; i < ent.getBlockList().size(); i++){
+            var newBlock = blockToBlockDTOnoReccurency(ent.getBlockList().get(i));
+            newBlock.getAutomobileLinksList()[1] = lastBlock;
+            lastBlock = newBlock;
+        }
+
+        lineDto.setStartBlock(lastBlock);
         return lineDto;
     }
 //
@@ -241,7 +314,7 @@ public abstract class MainMapper {
         trafficLight.setCycleTimeYellow(dto.getCycleTimeYellow());
         trafficLight.setLastSwitchTime(dto.getLastSwitchTime());
 
-        trafficLight.setControlledBlocks(blockDtoToBlock(dto.getControlledBlocks()));
+        trafficLight.setControlledBlocks(blockDtoToBlockNoReccurency(dto.getControlledBlocks()));
         return trafficLight;
     }
 
@@ -256,7 +329,7 @@ public abstract class MainMapper {
         trafficLightDTO.setCycleTimeYellow(ent.getCycleTimeYellow());
         trafficLightDTO.setLastSwitchTime(ent.getLastSwitchTime());
 
-        trafficLightDTO.setControlledBlocks(blockToBlockDTO(ent.getControlledBlocks()));
+        trafficLightDTO.setControlledBlocks(blockToBlockDTOnoReccurency(ent.getControlledBlocks()));
         return trafficLightDTO;
     }
 

@@ -119,7 +119,7 @@ public class MainMapperImpl {
         Line line = new Line();
         line.setLineLength(dto.getLineLength());
         line.setId(dto.getId());
-        line.setStartBlock(blockDtoToBlock(dto.getStartBlock()));
+        //line.setStartBlock(blockDtoToBlock(dto.getStartBlock()));
 
         return line;
     }
@@ -129,7 +129,7 @@ public class MainMapperImpl {
         LineDTO lineDto = new LineDTO();
         lineDto.setLineLength(ent.getLineLength());
         lineDto.setId(ent.getId());
-        lineDto.setStartBlock(readAllDescendants(ent.getStartBlock()));
+        //lineDto.setStartBlock(readAllDescendants(ent.getStartBlock()));
 
         return lineDto;
     }

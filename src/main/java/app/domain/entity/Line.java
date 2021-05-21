@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,11 +25,11 @@ public class Line {
     @Column(name = "lineLength")
     private Integer lineLength;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private RoadBlock startBlock;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<RoadBlock> blockList;
 
-    public Line(RoadBlock startBlock, int lineLength){
-        this.startBlock = startBlock;
+    public Line(List<RoadBlock> blockList, int lineLength){
+        this.blockList = blockList;
         this.lineLength = lineLength;
     }
 }
