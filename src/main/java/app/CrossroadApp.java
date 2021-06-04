@@ -4,6 +4,7 @@ import app.config.AppConfig;
 import app.domain.DTO.AutomobileDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
+import app.repository.TrafficLightRepository;
 import app.service.CarGenerationService;
 import app.service.CarMovingService;
 import app.service.RoadGenerationService;
@@ -37,6 +38,7 @@ public class CrossroadApp {
 //        test1.setIsCrossroad(true);
 //        block.save(test1);
 
+
         RoadGenerationService roadService = context.getBean(RoadGenerationService.class);
         roadService.initRoad();
         run();
@@ -56,9 +58,9 @@ public class CrossroadApp {
         System.out.println("Road Generated");
 
         trafficLightService.startAll();
-        trafficLightService.changeCycleTimeByColor(TrafficLightState.RED, 10);
+        trafficLightService.changeCycleTimeByColor(TrafficLightState.RED, 5);
         trafficLightService.changeCycleTimeByColor(TrafficLightState.YELLOW, 1);
-        trafficLightService.changeCycleTimeByColor(TrafficLightState.GREEN, 5);
+        trafficLightService.changeCycleTimeByColor(TrafficLightState.GREEN, 10);
         System.out.println("Traffic Lights are initiated");
 
         carGenerationService.generateCars(8);

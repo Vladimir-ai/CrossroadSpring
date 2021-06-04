@@ -1,111 +1,194 @@
 package app.repository.impl;
 
-
-import app.domain.model.Automobile;
+import app.domain.DTO.TrafficLightState;
+import app.domain.model.RoadBlock;
 import app.domain.model.TrafficLight;
 import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TrafficLightRepositoryImpl implements TrafficLightRepository {
-    private final SessionFactory sessionFactory;
+
+    private final DataSource dataSource;
     private final RoadBlockRepository roadBlockRepository;
 
     @Autowired
-    public TrafficLightRepositoryImpl(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository){
-        this.sessionFactory = sessionFactory;
+    public TrafficLightRepositoryImpl(DataSource dataSource, RoadBlockRepository roadBlockRepository) {
+        this.dataSource = dataSource;
         this.roadBlockRepository = roadBlockRepository;
     }
 
-
-
     @Override
     public Optional<TrafficLight> get(Long id) {
-        Session session = sessionFactory.openSession();
-        var result = session.get(TrafficLight.class, id);
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            var result = stmt.executeQuery("SELECT FROM trafficlight WHERE id = " + id);
+            if (!result.next())
+                return Optional.empty();
 
-        result.getControlledBlocks().size();
-        session.close();
+            var trafficLight = TrafficLight.builder().
+                    id(result.getLong("id"))
+                    .currentState(TrafficLightState.values()[result.getInt("trafficlightstate")])
+                    .cycleTimeGreen(result.getLong("cycletimegreen"))
+                    .cycleTimeYellow(result.getLong("cycletimeyellow"))
+                    .cycleTimeRed(result.getLong("cycletimered"))
+                    .lastSwitchTime(result.getLong("lastswitchtime"));
 
-        for (int i = 0; i < result.getControlledBlocks().size(); i++){
-            result.getControlledBlocks().set(i, roadBlockRepository.get(result.getControlledBlocks().get(i).getId()).get());
+            stmt.close();
+            stmt = connection.createStatement();
+            result = stmt.executeQuery("SELECT FROM trafficlight_roadblocks WHERE trafficlight_id = " + id);
+            List<RoadBlock> controlledBlocks = new ArrayList<>();
+
+            while (result.next()){
+                var res = roadBlockRepository.get(result.getLong("controlledblocks_id"));
+                res.ifPresent(controlledBlocks::add);
+            }
+
+            trafficLight.controlledBlocks(controlledBlocks);
+            return Optional.of(trafficLight.build());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-
-        return Optional.of(result);
+        return Optional.empty();
     }
 
     @Override
     public List<TrafficLight> getAll() {
-        Session session = sessionFactory.openSession();
-        var query = session.createQuery("from trafficLight ", TrafficLight.class);
-        var result = query.getResultList();
+        try (Connection connection = dataSource.getConnection()){
+            List<TrafficLight> trafficLights = new LinkedList<>();
+            var stmt = connection.createStatement();
+            var result = stmt.executeQuery("SELECT * FROM trafficlight");
+            while (result.next()) {
+                var trafficLight = TrafficLight.builder().
+                        id(result.getLong("id"))
+                        .currentState(TrafficLightState.values()[result.getInt("trafficlightstate")])
+                        .cycleTimeGreen(result.getLong("cycletimegreen"))
+                        .cycleTimeYellow(result.getLong("cycletimeyellow"))
+                        .cycleTimeRed(result.getLong("cycletimered"))
+                        .lastSwitchTime(result.getLong("lastswitchtime"));
 
-        result.forEach(res -> {
-            res.getControlledBlocks().size();
-        });
-
-        session.close();
-
-        result.forEach(res -> {
-            for (int i = 0; i < res.getControlledBlocks().size(); i++){
-                res.getControlledBlocks().set(i, roadBlockRepository.get(res.getControlledBlocks().get(i).getId()).get());
+                trafficLights.add(trafficLight.build());
             }
-        });
+            stmt.close();
 
-        return result;
+            for (var light : trafficLights){
+                stmt = connection.createStatement();
+                result = stmt.executeQuery("SELECT * FROM trafficlight_roadblocks WHERE trafficlight_id = " + light.getId());
+                List<RoadBlock> controlledBlocks = new ArrayList<>();
+
+                while (result.next()) {
+                    var res = roadBlockRepository.get(result.getLong("controlledblocks_id"));
+                    res.ifPresent(controlledBlocks::add);
+                }
+
+                light.setControlledBlocks(controlledBlocks);
+            }
+
+            return trafficLights;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public void save(TrafficLight entity) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(entity);
-        transaction.commit();
-        session.close();
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            var args = new Object[]{
+                    entity.getCurrentState().ordinal(),
+                    entity.getCycleTimeGreen(),
+                    entity.getCycleTimeYellow(),
+                    entity.getCycleTimeRed(),
+                    entity.getLastSwitchTime()
+            };
+            var q = new MessageFormat("INSERT INTO trafficlight (trafficlightstate, cycletimegreen, cycletimeyellow, cycletimered, lastswitchtime) VALUES " +
+                    "({0}, {1}, {2}, {3}, {4}) RETURNING id").format(args);
+            var result = stmt.executeQuery(q);
+            result.next();
+            var id = result.getInt("id");
+            stmt.close();
+
+            var msgFormat = new MessageFormat("INSERT INTO trafficlight_roadblocks (trafficlight_id, controlledblocks_id) VALUES ({0}, {1})");
+            for (var roadblock : entity.getControlledBlocks()) {
+                stmt = connection.createStatement();
+                stmt.execute(msgFormat.format(new Object[]{id, roadblock.getId()}));
+                stmt.close();
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
     public void update(TrafficLight entity) {
-        Session session = sessionFactory.openSession();
-        var trans = session.beginTransaction();
-        session.update(entity);
-        trans.commit();
-        session.close();
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            var args = new Object[] {
+                    entity.getCurrentState().ordinal(),
+                    entity.getCycleTimeGreen(),
+                    entity.getCycleTimeYellow(),
+                    entity.getCycleTimeRed(),
+                    Long.toString(entity.getLastSwitchTime()),
+                    entity.getId()
+            };
+
+            var q = new MessageFormat("UPDATE trafficlight SET (trafficlightstate, cycletimegreen, cycletimeyellow, cycletimered, lastswitchtime) = " +
+                    "({0}, {1}, {2}, {3}, {4}) WHERE id = {5}").format(args);
+            stmt.execute(q);
+            stmt.close();
+
+            for (var roadblock: entity.getControlledBlocks()) {
+                stmt = connection.createStatement();
+                stmt.execute("UPDATE roadblocks SET trafficlightstate = " + entity.getCurrentState().ordinal() +
+                        "WHERE id = " + roadblock.getId());
+
+                stmt.close();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
     public void delete(Long id) {
-        var session = sessionFactory.openSession();
-        var trans = session.beginTransaction();
-        var curr = session.get(Automobile.class, id);
-        session.delete(curr);
-        trans.commit();
-        session.close();
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            stmt.execute("DELETE FROM trafficlight_roadblocks WHERE trafficlight_id = " + id);
+            stmt.execute("DELETE FROM trafficlight WHERE id = " + id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
     public void delete(TrafficLight entity) {
-        var session = sessionFactory.openSession();
-        var transaction = session.beginTransaction();
-        var curr = session.get(TrafficLight.class, entity.getId());
-        session.delete(curr);
-        transaction.commit();
-        session.close();
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            stmt.execute("DELETE FROM trafficlight WHERE id = " + entity.getId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
     public void clear() {
-        try (var session = sessionFactory.openSession()) {
-            var transaction = session.beginTransaction();
-            session.createQuery("delete from trafficLight ").executeUpdate();
-            transaction.commit();
-         }catch (Exception ignored){}
+        try (Connection connection = dataSource.getConnection()){
+            var stmt = connection.createStatement();
+            stmt.executeQuery("TRUNCATE trafficlight");
+        } catch (SQLException throwables) {
+        }
     }
 }
