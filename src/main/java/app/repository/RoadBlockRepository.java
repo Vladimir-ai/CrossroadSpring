@@ -1,10 +1,8 @@
 package app.repository;
 
-import app.domain.DTO.RoadBlockDTO;
-import app.domain.entity.RoadBlock;
+import app.domain.model.RoadBlock;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface RoadBlockRepository {
     Optional<RoadBlock> get(Long id);

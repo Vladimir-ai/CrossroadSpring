@@ -1,6 +1,5 @@
-package app.domain.entity;
+package app.domain.model;
 
-import app.domain.DTO.RoadBlockDTO;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

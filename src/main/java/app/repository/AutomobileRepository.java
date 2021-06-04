@@ -1,10 +1,8 @@
 package app.repository;
 
-import app.domain.DTO.AutomobileDTO;
-import app.domain.entity.Automobile;
+import app.domain.model.Automobile;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 @Repository

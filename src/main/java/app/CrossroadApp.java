@@ -2,20 +2,12 @@ package app;
 
 import app.config.AppConfig;
 import app.domain.DTO.AutomobileDTO;
-import app.domain.DTO.DriveModel;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
-import app.domain.entity.Line;
-import app.domain.entity.RoadBlock;
-import app.mapper.MainMapper;
-import app.repository.AutomobileRepository;
-import app.repository.LineRepository;
-import app.repository.RoadBlockRepository;
 import app.service.CarGenerationService;
 import app.service.CarMovingService;
 import app.service.RoadGenerationService;
 import app.service.TrafficLightService;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -64,9 +56,9 @@ public class CrossroadApp {
         System.out.println("Road Generated");
 
         trafficLightService.startAll();
-        trafficLightService.changeCycleTimeByColor(TrafficLightState.RED, 5);
+        trafficLightService.changeCycleTimeByColor(TrafficLightState.RED, 10);
         trafficLightService.changeCycleTimeByColor(TrafficLightState.YELLOW, 1);
-        trafficLightService.changeCycleTimeByColor(TrafficLightState.GREEN, 10);
+        trafficLightService.changeCycleTimeByColor(TrafficLightState.GREEN, 5);
         System.out.println("Traffic Lights are initiated");
 
         carGenerationService.generateCars(8);

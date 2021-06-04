@@ -16,11 +16,8 @@ public class RoadComponent {
     private static final int MIN_AUTO_SPEED = 1;
     private static final int MAX_AUTO_SPEED = 3;
 
-    private final RoadBlockRepositoryImpl roadBlockRepository;
-
     @Autowired
-    public RoadComponent(RoadBlockRepositoryImpl roadBlockRepository) {
-        this.roadBlockRepository = roadBlockRepository;
+    public RoadComponent() {
     }
 
     public int getLinesPerSide(){

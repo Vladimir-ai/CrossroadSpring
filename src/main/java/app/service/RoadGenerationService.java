@@ -5,13 +5,10 @@ import app.domain.DTO.LineDTO;
 import app.domain.DTO.RoadBlockDTO;
 import app.domain.DTO.TrafficLightDTO;
 import app.domain.DTO.TrafficLightState;
-import app.domain.entity.Line;
-import app.domain.entity.RoadBlock;
 import app.mapper.MainMapper;
 import app.repository.LineRepository;
 import app.repository.RoadBlockRepository;
 import app.repository.TrafficLightRepository;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +48,6 @@ public class RoadGenerationService {
 
     private void generateRoad() {
         //инициирует дороги и связывает однонаправленные
-        lineRepository.clear();
-        roadBlockRepository.clear();
-        trafficLightRepository.clear();
 
         List<LineDTO> lines = new ArrayList<>();
 

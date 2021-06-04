@@ -1,6 +1,6 @@
 package app.repository.impl;
 
-import app.domain.entity.Automobile;
+import app.domain.model.Automobile;
 import app.repository.AutomobileRepository;
 import app.repository.RoadBlockRepository;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.exception.SQLGrammarException;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

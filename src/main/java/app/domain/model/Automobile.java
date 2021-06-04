@@ -1,4 +1,4 @@
-package app.domain.entity;
+package app.domain.model;
 
 import app.domain.DTO.DriveModel;
 import javax.persistence.CascadeType;

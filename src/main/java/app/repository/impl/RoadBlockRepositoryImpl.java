@@ -1,8 +1,7 @@
 package app.repository.impl;
 
-import app.domain.DTO.RoadBlockDTO;
-import app.domain.entity.Automobile;
-import app.domain.entity.RoadBlock;
+import app.domain.model.Automobile;
+import app.domain.model.RoadBlock;
 import app.repository.RoadBlockRepository;
 import java.util.List;
 import java.util.Optional;

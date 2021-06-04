@@ -1,7 +1,6 @@
 package app.repository;
 
-import app.domain.DTO.TrafficLightDTO;
-import app.domain.entity.TrafficLight;
+import app.domain.model.TrafficLight;
 import java.util.List;
 import java.util.Optional;
 

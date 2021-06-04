@@ -1,31 +1,22 @@
 package app.repository.impl;
 
-import app.domain.DTO.LineDTO;
-import app.domain.entity.Automobile;
-import app.domain.entity.Line;
+import app.domain.model.Line;
 import app.repository.LineRepository;
 import app.repository.RoadBlockRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.SQLGrammarException;
-import org.hibernate.proxy.HibernateProxy;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class LineRepositoryImpl implements LineRepository {
 
     private final SessionFactory sessionFactory;
     private final RoadBlockRepository roadBlockRepository;
-
 
     @Autowired
     public LineRepositoryImpl(SessionFactory sessionFactory, RoadBlockRepository roadBlockRepository){
@@ -47,17 +38,6 @@ public class LineRepositoryImpl implements LineRepository {
         for (int i = 0; i < result.getLineLength(); i++){
             result.getBlockList().set(i,  roadBlockRepository.get(result.getBlockList().get(i).getId()).get());
         }
-//
-//        for (var block : result.getBlockList()) {
-//            var proxyLeft =  (HibernateProxy) block.getLeftBlock();
-//            if (proxyLeft != null)
-//                proxyLeft.getHibernateLazyInitializer().getImplementation();
-//
-//            var proxyRight = (HibernateProxy) block.getRightBlock();
-//            if(proxyRight != null)
-//                proxyRight.getHibernateLazyInitializer().getImplementation();
-//
-//        }
         session.close();
         return Optional.of(result);
     }

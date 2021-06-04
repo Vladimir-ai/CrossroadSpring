@@ -1,7 +1,6 @@
 package app.repository;
 
-import app.domain.DTO.LineDTO;
-import app.domain.entity.Line;
+import app.domain.model.Line;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
